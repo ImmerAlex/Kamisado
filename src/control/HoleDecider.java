@@ -5,6 +5,8 @@ import boardifier.control.Controller;
 import boardifier.control.Decider;
 import boardifier.model.Model;
 import boardifier.model.action.ActionList;
+import model.HoleBoard;
+import model.HoleStageModel;
 import model.Pawn;
 
 import java.util.Calendar;
@@ -20,42 +22,13 @@ public class HoleDecider extends Decider {
 
     @Override
     public ActionList decide() {
-//        // do a cast get a variable of the real type to get access to the attributes of HoleStageModel
-//        HoleStageModel stage = (HoleStageModel)model.getGameStage();
-//        HoleBoard board = stage.getBoard(); // get the board
-//        HolePawnPot pot = null; // the pot where to take a pawn
-//        GameElement pawn = null; // the pawn that is moved
-//        int rowDest = 0; // the dest. row in board
-//        int colDest = 0; // the dest. col in board
-//
-//        if (model.getIdPlayer() == Pawn.PAWN_X) {
-//            pot = stage.getBlackPot();
-//        }
-//        else {
-//            pot = stage.getRedPot();
-//        }
-//
-//        for(int i=0;i<4;i++) {
-//            Pawn p = (Pawn)pot.getElement(i,0);
-//            // if there is a pawn in i.
-//            if (p != null) {
-//                // get the valid cells
-////                List<Point> valid = board.computeValidCells(p.getNumber());
-//                if (valid.size() != 0) {
-//                    // choose at random one of the valid cells
-//                    int id = loto.nextInt(valid.size());
-//                    pawn = p;
-//                    rowDest = valid.get(id).y;
-//                    colDest = valid.get(id).x;
-//                    break; // stop the loop
-//                }
-//            }
-//        }
-//
-//        ActionList actions = ActionFactory.generatePutInContainer( model, pawn, "holeboard", rowDest, colDest);
-//        actions.setDoEndOfTurn(true); // after playing this action list, it will be the end of turn for current player.
+        // do a cast get a variable of the real type to get access to the attributes of HoleStageModel
+        HoleStageModel stage = (HoleStageModel) model.getGameStage();
+        HoleBoard board = stage.getBoard(); // get the board
 
-//        return actions;
-        return ActionFactory.generatePutInContainer(model, new Pawn(0, 0, 'A', model.getGameStage()), "bob", 4, 4);
+        ActionList actions = ActionFactory.generateMoveWithinContainer( model, board.getElement(7 ,0), 7, 0);
+        actions.setDoEndOfTurn(true); // after playing this action list, it will be the end of turn for current player.
+
+        return actions;
     }
 }

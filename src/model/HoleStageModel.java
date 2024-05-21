@@ -1,9 +1,8 @@
 package model;
 
-import boardifier.model.GameStageModel;
-import boardifier.model.Model;
-import boardifier.model.StageElementsFactory;
-import boardifier.model.TextElement;
+import boardifier.model.*;
+import boardifier.view.ConsoleColor;
+import boardifier.view.View;
 
 import java.util.List;
 
@@ -37,11 +36,16 @@ public class HoleStageModel extends GameStageModel {
     private List<Pawn> XPawns;
     private List<Pawn> OPawns;
     private TextElement playerName;
-    // Uncomment next line if the example with a main container is used. see end of HoleStageFactory and HoleStageView
-    //private ContainerElement mainContainer;
+    private boolean firstPlayer;
+    private String lockedColor;
 
     public HoleStageModel(String name, Model model) {
         super(name, model);
+        firstPlayer = true;
+    }
+
+    public boolean isValidCoordinates(int row, int col) {
+        return row >= 0 && row <= 8 && col >= 0 && col <= 8;
     }
 
     public HoleBoard getBoard() {
@@ -82,8 +86,98 @@ public class HoleStageModel extends GameStageModel {
         playerName = text;
     }
 
+    public boolean isFirstPlayer() {
+        return firstPlayer;
+    }
+
+    public void setFirstPlayer(boolean firstPlayer) {
+        this.firstPlayer = firstPlayer;
+    }
+
     @Override
     public StageElementsFactory getDefaultElementFactory() {
         return new HoleStageFactory(this);
+    }
+
+    public String findPawnFrom() {
+        for (int i = 0; i < board.getNbRows(); i++) {
+            for (int j = 0; j < board.getNbCols(); j++) {
+                GameElement element = board.getElement(j, i);
+                if (element instanceof Pawn pawn) {
+                    if (ConsoleColor.getColorValue(pawn.getStringColor()).equals(lockedColor) && goodFromEntry(i, j)) {
+                        return "" + (char) ('A' + i) + (char) ('1' + j);
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public boolean goodFromEntry(int row, int col) {
+        String currentPlayer = getCurrentPlayerName();
+        GameElement element = getBoard().getElement(col, row);
+
+        if (element instanceof Pawn pawn) {
+            if (pawn.getSymbol() == 'X' && (currentPlayer.equals("Player X") || currentPlayer.equals("Computer X"))) {
+                return true;
+            } else
+                return pawn.getSymbol() == 'O' && (currentPlayer.equals("Player O") || currentPlayer.equals("Computer O"));
+        }
+
+        return false;
+    }
+
+    public boolean canMoveFrom(String lineFrom) {
+        int rowFrom = lineFrom.charAt(0) - 'A';
+        int colFrom = lineFrom.charAt(1) - '1';
+        return hasReachableCells(model, rowFrom, colFrom);
+    }
+
+    private boolean hasReachableCells(Model model, int row, int col) {
+        HoleStageModel gameStage = (HoleStageModel) model.getGameStage();
+        HoleBoard board = gameStage.getBoard();
+
+        board.setValidCells(gameStage, row, col);
+        boolean[][] reachableCells = board.getReachableCells();
+
+        for (boolean[] cells : reachableCells) {
+            for (boolean cell : cells) {
+                if (cell) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public void setLockedColor(HoleStageModel gameStage, View view, int rowTo, int colTo) {
+        int x = computeX(rowTo);
+        int y = computeY(colTo) - 1;
+        String value = view.getElementLook(gameStage.getBoard()).getShapePoint(x, y);
+        lockedColor = ConsoleColor.getColorValue(value);
+    }
+
+    private int computeX(int row) {
+        return 2 + (row * 8);
+    }
+
+    private int computeY(int col) {
+        return 3 + (2 * col);
+    }
+
+    public void isWin(int row, int col) {
+        GameElement element = board.getElement(col, row);
+
+        if (element instanceof Pawn pawn) {
+            if (pawn.getSymbol() == 'X' && col == 0) {
+                model.setIdWinner(0);
+                model.stopStage();
+            } else if (pawn.getSymbol() == 'O' && col == 7) {
+                model.setIdWinner(1);
+                model.stopStage();
+            }
+        }
     }
 }
