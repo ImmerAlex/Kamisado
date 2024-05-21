@@ -80,4 +80,13 @@ public class HoleBoard extends ContainerElement {
         }
         System.out.println("]");
     }
+
+    public HoleBoard copy() {
+        HoleBoard copy = new HoleBoard((int) x, (int) y, nbRows, nbCols, gameStageModel);
+        copy.reachableCells = new boolean[nbRows][nbCols];
+        for (int i = 0; i < nbRows; i++) {
+            System.arraycopy(reachableCells[i], 0, copy.reachableCells[i], 0, nbCols);
+        }
+        return copy;
+    }
 }

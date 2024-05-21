@@ -28,7 +28,7 @@ public class HoleConsole {
         } else if (mode == 1) {
             model.addHumanPlayer("Player X");
             model.addComputerPlayer("Computer O");
-        } else if (mode == 2) {
+        } else {
             model.addComputerPlayer("Computer X");
             model.addComputerPlayer("Computer O");
         }

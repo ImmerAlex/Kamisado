@@ -4,6 +4,7 @@ import boardifier.model.*;
 import boardifier.view.ConsoleColor;
 import boardifier.view.View;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,6 +31,7 @@ import java.util.List;
  * In "The Hole", everytime a pawn is put in the main board, we have to check if the party is ended and in this case, who is the winner.
  * This is the role of computePartyResult(), which is called by the callback function if there is no more pawn to play.
  */
+
 public class HoleStageModel extends GameStageModel {
     // define stage game elements
     private HoleBoard board;
@@ -97,6 +99,16 @@ public class HoleStageModel extends GameStageModel {
     @Override
     public StageElementsFactory getDefaultElementFactory() {
         return new HoleStageFactory(this);
+    }
+
+    public String getFirstFromPlay() {
+        List<String> froms = new ArrayList<>();
+
+        for (int i = 0; i < board.getNbCols(); i++) {
+            froms.add("A" + (char) ('1' + i));
+        }
+
+        return froms.get((int) (Math.random() * froms.size()));
     }
 
     public String findPawnFrom() {
@@ -179,5 +191,20 @@ public class HoleStageModel extends GameStageModel {
                 model.stopStage();
             }
         }
+    }
+
+    public HoleStageModel copy() {
+        HoleStageModel copy = new HoleStageModel(getName(), model);
+        copy.setBoard(board.copy());
+        copy.setXPawns(new ArrayList<>(XPawns));
+        copy.setOPawns(new ArrayList<>(OPawns));
+        copy.setPlayerName(playerName.copy());
+        copy.setFirstPlayer(firstPlayer);
+        copy.setLockedColor(lockedColor);
+        return copy;
+    }
+
+    private void setLockedColor(String lockedColor) {
+        this.lockedColor = lockedColor;
     }
 }

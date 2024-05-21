@@ -34,4 +34,11 @@ public class TextElement extends GameElement {
             }
         }
     }
+
+    public TextElement copy() {
+        TextElement copy = new TextElement(text, gameStageModel);
+        copy.setAnimation(animation);
+        copy.setLocation(getX(), getY());
+        return copy;
+    }
 }

@@ -3,12 +3,10 @@ package control;
 import boardifier.control.ActionFactory;
 import boardifier.control.ActionPlayer;
 import boardifier.control.Controller;
-import boardifier.model.GameElement;
 import boardifier.model.Model;
 import boardifier.model.Player;
 import boardifier.model.action.ActionList;
 import boardifier.view.View;
-import model.HoleBoard;
 import model.HoleStageModel;
 import model.Pawn;
 
@@ -39,7 +37,7 @@ public class HoleController extends Controller {
         Player p = model.getCurrentPlayer();
         if (p.getType() == Player.COMPUTER) {
             System.out.println("COMPUTER PLAYS");
-            HoleDecider decider = new HoleDecider(model, this);
+            HoleSmartDecider decider = new HoleSmartDecider(model, this, view);
             ActionPlayer play = new ActionPlayer(model, this, decider, null);
             play.start();
         } else {
@@ -96,11 +94,15 @@ public class HoleController extends Controller {
     private boolean analyseAndPlay(String from, String to) {
         HoleStageModel stage = (HoleStageModel) model.getGameStage();
 
+        if (from.length() != 2) return false;
+
         int rowFrom = from.charAt(0) - 'A';
         int colFrom = from.charAt(1) - '1';
 
         if (!stage.isValidCoordinates(rowFrom, colFrom)) return false;
         if (!stage.goodFromEntry(rowFrom, colFrom)) return false;
+
+        if (to.length() != 2) return false;
 
         int rowTo = to.charAt(0) - 'A';
         int colTo = to.charAt(1) - '1';
