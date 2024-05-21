@@ -1,12 +1,11 @@
 package model;
 
-import boardifier.control.Logger;
-import boardifier.model.GameStageModel;
 import boardifier.model.ContainerElement;
+import boardifier.model.GameStageModel;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.awt.*;
 
 /**
  * Hole main board represent the element where pawns are put when played
@@ -18,14 +17,14 @@ import java.awt.*;
 public class HoleBoard extends ContainerElement {
     public HoleBoard(int x, int y, int nbRows, int nbCols, GameStageModel gameStageModel) {
         // call the super-constructor to create a 3x3 grid, named "holeboard", and in x,y in space
-        super("holeboard", x, y, nbRows , nbCols, gameStageModel);
+        super("holeboard", x, y, nbRows, nbCols, gameStageModel);
     }
 
     public void setValidCells(HoleStageModel gameStage, int row, int col) {
         resetReachableCells(false);
         List<Point> valid = computeValidCells(gameStage, row, col);
         if (valid != null) {
-            for(Point p : valid) {
+            for (Point p : valid) {
                 reachableCells[p.y][p.x] = true;
             }
         }
@@ -76,18 +75,6 @@ public class HoleBoard extends ContainerElement {
             System.out.print("\t[");
             for (boolean cell : cells) {
                 System.out.print(cell + ", ");
-            }
-            System.out.println("]");
-        }
-        System.out.println("]");
-    }
-
-    public void displayDirections(int[][] directions) {
-        System.out.println("[");
-        for(int[] direction : directions) {
-            System.out.print("\t[");
-            for (int d : direction) {
-                System.out.print(d + ", ");
             }
             System.out.println("]");
         }

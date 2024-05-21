@@ -15,9 +15,7 @@ public class ColoredBoardLook extends ClassicBoardLook {
 
     protected void render() {
         Logger.trace("called", this);
-        // create & clear the viewport if needed
         setSize(getWidth(), getHeight());
-        // clear the viewport => if there are more than inners looks to render (e.g. borders), must override this method
         clearShape();
         renderCoords();
         renderBorders();

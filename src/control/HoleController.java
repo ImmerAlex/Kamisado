@@ -85,7 +85,8 @@ public class HoleController extends Controller {
                         System.out.println("incorrect instruction. retry !");
                     }
 
-                } catch (IOException ignored) {}
+                } catch (IOException ignored) {
+                }
             }
         }
     }
@@ -164,7 +165,8 @@ public class HoleController extends Controller {
         if (element instanceof Pawn pawn) {
             if (pawn.getSymbol() == 'X' && (currentPlayer.equals("Player X") || currentPlayer.equals("Computer X"))) {
                 return true;
-            } else return pawn.getSymbol() == 'O' && (currentPlayer.equals("Player O") || currentPlayer.equals("Computer O"));
+            } else
+                return pawn.getSymbol() == 'O' && (currentPlayer.equals("Player O") || currentPlayer.equals("Computer O"));
         }
 
         return false;

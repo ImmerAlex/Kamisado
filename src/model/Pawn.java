@@ -1,6 +1,5 @@
 package model;
 
-import boardifier.model.ElementTypes;
 import boardifier.model.GameElement;
 import boardifier.model.GameStageModel;
 import boardifier.view.ConsoleColor;
@@ -11,10 +10,10 @@ import boardifier.view.ConsoleColor;
  */
 public class Pawn extends GameElement {
 
-    private int number;
-    private int color;
-    private char symbol;
     public static int PAWN_X = 0;
+    private final int number;
+    private final int color;
+    private final char symbol;
 
     public Pawn(int number, int color, char symbol, GameStageModel gameStageModel) {
         super(gameStageModel);
@@ -27,6 +26,7 @@ public class Pawn extends GameElement {
     public int getNumber() {
         return number;
     }
+
     public int getColor() {
         return color;
     }
