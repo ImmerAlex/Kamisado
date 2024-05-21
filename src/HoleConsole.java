@@ -8,6 +8,8 @@ import boardifier.model.Model;
 public class HoleConsole {
 
     public static void main(String[] args) {
+//        Logger.setLevel(Logger.LOGGER_TRACE);
+//        Logger.setVerbosity(Logger.VERBOSE_HIGH);
 
         int mode = 0;
         if (args.length == 1) {
@@ -17,9 +19,6 @@ public class HoleConsole {
             }
             catch(NumberFormatException ignored) {}
         }
-
-//        Logger.setLevel(Logger.LOGGER_TRACE);
-//        Logger.setVerbosity(Logger.VERBOSE_HIGH);
 
         Model model = new Model();
 
@@ -34,10 +33,10 @@ public class HoleConsole {
             model.addComputerPlayer("Computer O");
         }
 
-        StageFactory.registerModelAndView("HoleConsole", "model.HoleStageModel", "view.HoleStageView");
+        StageFactory.registerModelAndView("Kamisado", "model.HoleStageModel", "view.HoleStageView");
         View holeView = new View(model);
         HoleController control = new HoleController(model,holeView);
-        control.setFirstStageName("HoleConsole");
+        control.setFirstStageName("Kamisado");
 
         try {
             control.startGame();
@@ -46,6 +45,5 @@ public class HoleConsole {
         catch(GameException e) {
             System.out.println("Cannot start the game. Abort");
         }
-
     }
 }

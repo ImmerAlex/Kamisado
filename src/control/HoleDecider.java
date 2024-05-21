@@ -7,7 +7,6 @@ import boardifier.model.Model;
 import boardifier.model.action.ActionList;
 import model.HoleBoard;
 import model.HoleStageModel;
-import model.Pawn;
 
 import java.util.Calendar;
 import java.util.Random;
@@ -15,6 +14,7 @@ import java.util.Random;
 public class HoleDecider extends Decider {
 
     private static final Random loto = new Random(Calendar.getInstance().getTimeInMillis());
+
 
     public HoleDecider(Model model, Controller control) {
         super(model, control);
@@ -26,7 +26,9 @@ public class HoleDecider extends Decider {
         HoleStageModel stage = (HoleStageModel) model.getGameStage();
         HoleBoard board = stage.getBoard(); // get the board
 
-        ActionList actions = ActionFactory.generateMoveWithinContainer( model, board.getElement(7 ,0), 7, 0);
+
+
+        ActionList actions = ActionFactory.generateMoveWithinContainer(model, board.getElement(7, 0), 7, 0);
         actions.setDoEndOfTurn(true); // after playing this action list, it will be the end of turn for current player.
 
         return actions;
