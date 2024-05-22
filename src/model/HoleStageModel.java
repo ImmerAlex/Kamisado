@@ -106,8 +106,9 @@ public class HoleStageModel extends GameStageModel {
         List<String> froms = new ArrayList<>();
 
         for (int i = 0; i < board.getNbCols(); i++) {
-            froms.add("A" + (char) ('1' + i));
+            froms.add((char) (i + 'A') + "8");
         }
+
 
         return froms.get((int) (Math.random() * froms.size()));
     }
@@ -173,6 +174,10 @@ public class HoleStageModel extends GameStageModel {
         return false;
     }
 
+    public boolean noOneCanMove() {
+
+    }
+
     public void setLockedColor(HoleStageModel gameStage, View view, int rowTo, int colTo) {
         int x = computeX(rowTo);
         int y = computeY(colTo) - 1;
@@ -225,5 +230,7 @@ public class HoleStageModel extends GameStageModel {
         this.lockedColor = lockedColor;
     }
 
-
+    public String getLockedColor() {
+        return lockedColor;
+    }
 }

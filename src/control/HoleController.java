@@ -49,7 +49,9 @@ public class HoleController extends Controller {
             System.out.println("COMPUTER PLAYS");
             Decider decider = aiSelector.getDecider(model.getIdPlayer(), this);
             ActionPlayer play = new ActionPlayer(model, this, decider, null);
-            play.start();
+            try {
+                play.start();
+            } catch (NullPointerException ignored) {}
         } else {
             boolean ok = false;
             while (!ok) {

@@ -13,7 +13,6 @@ import model.MinimalBoard;
 import model.Pawn;
 import model.binary_tree.Tree;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -53,17 +52,26 @@ public class HoleSmartDecider extends Decider {
             try {
                 if (stage.isFirstPlayer()) {
                     from = stage.getFirstFromPlay();
+                    System.out.println("From getFirstFromPlay: " + from);
                 } else {
                     from = stage.findPawnFrom();
+                    System.out.println("From findPawnFrom: " + from);
                 }
 
                 rowFrom = from.charAt(0) - 'A';
                 colFrom = from.charAt(1) - '1';
 
-
                 if (!stage.isValidCoordinates(rowFrom, colFrom)) throw new Exception();
                 if (!stage.goodFromEntry(rowFrom, colFrom)) throw new Exception();
-                if (!stage.canMoveFrom(from)) throw new Exception();
+                if (!stage.canMoveFrom(from)) {
+                    if (noOneCanMove(board)) { //TODO: Implement noOneCanMove
+                        System.out.println("No one can move. End of game.");
+                        System.exit(0);
+                    }
+                    System.out.println(model.getGameStage().getCurrentPlayerName() + " cannot move. Pass turn.");
+                    ok = true;
+                    continue;
+                }
 
                 setAllPossibleMove(board);
 
@@ -71,30 +79,27 @@ public class HoleSmartDecider extends Decider {
 
                 setLoosingMove(stage, board);
 
-                tree.display();
-
                 to = tree.getBestCoup();
 
-                ok = true;
+                int rowTo = to.charAt(0) - 'A';
+                int colTo = to.charAt(1) - '1';
 
-            } catch (Exception e) {
-                System.out.println("incorrect instruction. retry !");
-            }
+                stage.setLockedColor(stage, view, rowTo, colTo);
+                stage.setFirstPlayer(false);
+
+                Pawn pawn = (Pawn) board.getElement(colFrom, rowFrom);
+
+                ActionList actions = ActionFactory.generateMoveWithinContainer(model, pawn, colTo, rowTo);
+                actions.setDoEndOfTurn(true);
+
+                stage.isWin();
+
+                return actions;
+
+            } catch (Exception ignored) {}
         }
 
-        int rowTo = to.charAt(0) - 'A';
-        int colTo = to.charAt(1) - '1';
-
-        stage.setLockedColor(stage, view, rowTo, colTo);
-
-        Pawn pawn = (Pawn) board.getElement(colFrom, rowFrom);
-
-        ActionList actions = ActionFactory.generateMoveWithinContainer(model, pawn, colTo, rowTo);
-        actions.setDoEndOfTurn(true);
-
-        stage.isWin();
-
-        return actions;
+        return null;
     }
 
     private void setWiningMove(HoleStageModel stage, HoleBoard board) {
