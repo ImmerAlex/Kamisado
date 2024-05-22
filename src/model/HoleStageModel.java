@@ -180,6 +180,13 @@ public class HoleStageModel extends GameStageModel {
         lockedColor = ConsoleColor.getColorValue(value);
     }
 
+    public String getBoardColor(HoleStageModel gameStage, View view, int rowTo, int colTo) {
+        int x = computeX(rowTo);
+        int y = computeY(colTo) - 1;
+        String value = view.getElementLook(gameStage.getBoard()).getShapePoint(x, y);
+        return ConsoleColor.getColorValue(value);
+    }
+
     private int computeX(int row) {
         return 2 + (row * 8);
     }
@@ -217,4 +224,6 @@ public class HoleStageModel extends GameStageModel {
     private void setLockedColor(String lockedColor) {
         this.lockedColor = lockedColor;
     }
+
+
 }

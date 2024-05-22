@@ -104,4 +104,18 @@ public class ConsoleColor {
             default -> WHITE_BACKGROUND;
         };
     }
+
+    public static int getColorId(String color) {
+        return switch (color) {
+            case BROWN_BACKGROUND -> 1;
+            case GREEN_BACKGROUND -> 2;
+            case RED_BACKGROUND -> 3;
+            case YELLOW_BACKGROUND -> 4;
+            case PINK_BACKGROUND -> 5;
+            case MAGENTA_BACKGROUND -> 6;
+            case BLUE_BACKGROUND -> 7;
+            case ORANGE_BACKGROUND -> 8;
+            default -> -1;
+        };
+    }
 }

@@ -5,12 +5,16 @@ import boardifier.control.Controller;
 import boardifier.control.Decider;
 import boardifier.model.Model;
 import boardifier.model.action.ActionList;
+import boardifier.view.ConsoleColor;
 import boardifier.view.View;
 import model.HoleBoard;
 import model.HoleStageModel;
+import model.MinimalBoard;
 import model.Pawn;
 import model.binary_tree.Tree;
 
+import java.awt.*;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
@@ -105,22 +109,54 @@ public class HoleSmartDecider extends Decider {
     }
 
     private String setLoosingMove(HoleStageModel stage, HoleBoard board) {
-        char[][] minimalBoard = createMinimalBoard(board);
-        displayCharBoard(minimalBoard);
+        MinimalBoard[][] minimalBoardBase = createMinimalBoard(board);
+        String enemyPlayerName = stage.getCurrentPlayerName().equals("Player X") || stage.getCurrentPlayerName().equals("Computer X") ? "Player O" : "Player X";
+        List<String> validMoveCurrentPlayer = getValidCurrentPlayerMove(board);
+
+        for (String move : validMoveCurrentPlayer) {
+            MinimalBoard[][] minimalBoard = minimalBoardBase.clone();
+
+            int row = move.charAt(0) - 'A';
+            int col = move.charAt(1) - '1';
+
+            String boardColorLock = stage.getBoardColor(stage, view, row, col);
+            int[] coordPawnEnemy = findPawnFrom(minimalBoardBase, boardColorLock, enemyPlayerName);
+            System.out.println("" + (char) (coordPawnEnemy[0] + 'A') + (char) (coordPawnEnemy[1] + '1'));
+
+//            List<String> validMoveEnemyPlayer = getValideCellsMove(minimalBoard, row, col, enemyPlayerName);
+        }
 
         return null;
     }
 
-    private char[][] createMinimalBoard(HoleBoard board) {
-        char[][] minimalBoard = new char[board.getNbCols()][board.getNbRows()];
+    public int[] findPawnFrom(MinimalBoard[][] minimalBoardBase, String boardColorLock, String enemyPlayerName) {
+        int[] coords = new int[2];
+        char symboleToFound = enemyPlayerName.equals("Player X") || enemyPlayerName.equals("Computer X") ? 'O' : 'X';
+        int idColor = ConsoleColor.getColorId(boardColorLock);
+
+        for (int i = 0; i < minimalBoardBase.length; i++) {
+            for (int j = 0; j < minimalBoardBase[i].length; j++) {
+                //TODO: Fix i always be 0
+                if (minimalBoardBase[i][j].getSymbol() == symboleToFound && minimalBoardBase[i][j].getIdColor() == idColor) {
+                    coords[0] = i;
+                    coords[1] = j;
+                }
+            }
+        }
+
+        return coords;
+    }
+
+    private MinimalBoard[][] createMinimalBoard(HoleBoard board) {
+        MinimalBoard[][] minimalBoard = new MinimalBoard[board.getNbCols()][board.getNbRows()];
 
         for (int i = 0; i < board.getNbCols(); i++) {
             for (int j = 0; j < board.getNbRows(); j++) {
                 Pawn pawn = (Pawn) board.getElement(i, j);
                 if (pawn != null) {
-                    minimalBoard[i][j] = pawn.getSymbol();
+                    minimalBoard[i][j] = new MinimalBoard(pawn.getSymbol(), pawn.getColor());
                 } else {
-                    minimalBoard[i][j] = ' ';
+                    minimalBoard[i][j] = new MinimalBoard('N', -1);
                 }
             }
         }
@@ -141,14 +177,59 @@ public class HoleSmartDecider extends Decider {
         }
     }
 
+    public List<String> getValideCellsMove(MinimalBoard[][] minimalBoard, int row, int col, String playerName) {
+        List<String> lst = new ArrayList<>();
+        int[][] directions;
+
+        if (playerName.equals("Player X") || playerName.equals("Computer X")) {
+            // Up, Up-Right, Up-Left
+            directions = new int[][]{{-1, 1}, {-1, 1}, {-1, -1}};
+        } else {
+            // Down, Down-Right, Down-Left
+            directions = new int[][]{{1, 0}, {1, 1}, {1, -1}};
+        }
+
+        for (int[] dir : directions) {
+            int dx = dir[0], dy = dir[1];
+            int x = row + dx, y = col + dy;
+
+            while (x >= 0 && x < 8 && y >= 0 && y < 8) {
+                if (minimalBoard[x][y].getSymbol() == 'N') {
+                    lst.add("" + (char) (x + 'A') + (char) (y + '1'));
+                } else {
+                    break;
+                }
+
+                x += dx;
+                y += dy;
+            }
+        }
+
+
+        return lst;
+    }
+
+    public List<String> getValidCurrentPlayerMove(HoleBoard board) {
+        List<String> lst = new ArrayList<>();
+        boolean[][] reachableCells = board.getReachableCells();
+
+        for (int i = 0; i < board.getNbCols(); i++) {
+            for (int j = 0; j < board.getNbRows(); j++) {
+                if (reachableCells[i][j]) {
+                    lst.add("" + (char) (j + 'A') + (char) (i + '1'));
+                }
+            }
+        }
+
+        return lst;
+    }
 
 
 
 
 
 
-
-    private void displayCharBoard(char[][] board) {
+    private void displayCharBoard(MinimalBoard[][] board) {
         System.out.println("[");
         for (int i = 0; i < board.length; i++) {
             System.out.print("\t[");
