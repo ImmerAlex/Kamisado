@@ -3,6 +3,7 @@ package control;
 import boardifier.control.ActionFactory;
 import boardifier.control.ActionPlayer;
 import boardifier.control.Controller;
+import boardifier.control.Decider;
 import boardifier.model.Model;
 import boardifier.model.Player;
 import boardifier.model.action.ActionList;
@@ -13,12 +14,21 @@ import model.Pawn;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 
 public class HoleController extends Controller {
+    public static AISelector aiSelector;
     BufferedReader consoleIn;
 
     public HoleController(Model model, View view) {
         super(model, view);
+        aiSelector = new AISelector(model, view);
+        List<Player> players = model.getPlayers();
+        for (int i = 0; i < players.size(); i++) {
+            if (players.get(i).getType() == Player.COMPUTER) {
+                aiSelector.selectAndSetAiType(i);
+            }
+        }
     }
 
     public void stageLoop() {
@@ -37,7 +47,7 @@ public class HoleController extends Controller {
         Player p = model.getCurrentPlayer();
         if (p.getType() == Player.COMPUTER) {
             System.out.println("COMPUTER PLAYS");
-            HoleSmartDecider decider = new HoleSmartDecider(model, this, view);
+            Decider decider = aiSelector.getDecider(model.getIdPlayer(), this);
             ActionPlayer play = new ActionPlayer(model, this, decider, null);
             play.start();
         } else {
