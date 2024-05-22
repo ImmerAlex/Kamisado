@@ -144,12 +144,14 @@ public class HoleStageModel extends GameStageModel {
     public boolean goodFromEntry(String from) {
         int row = from.charAt(0) - 'A';
         int col = from.charAt(1) - '1';
+        if (!isValidCoordinates(row, col)) return false;
         return goodFromEntry(row, col);
     }
 
     public boolean canMoveFrom(String lineFrom) {
         int rowFrom = lineFrom.charAt(0) - 'A';
         int colFrom = lineFrom.charAt(1) - '1';
+        if (!isValidCoordinates(rowFrom, colFrom)) return false;
         return hasReachableCells(model, rowFrom, colFrom);
     }
 
