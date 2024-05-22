@@ -132,10 +132,12 @@ public class HoleStageModel extends GameStageModel {
         GameElement element = getBoard().getElement(col, row);
 
         if (element instanceof Pawn pawn) {
-            if (pawn.getSymbol() == 'X' && (currentPlayer.equals("Player X") || currentPlayer.equals("Computer X"))) {
+            if (pawn.getSymbol() == 'X' && (currentPlayer.equals("Player X")
+                    || currentPlayer.equals("Computer X"))) {
                 return true;
             } else
-                return pawn.getSymbol() == 'O' && (currentPlayer.equals("Player O") || currentPlayer.equals("Computer O"));
+                return pawn.getSymbol() == 'O' && (currentPlayer.equals("Player O")
+                        || currentPlayer.equals("Computer O"));
         }
 
         return false;

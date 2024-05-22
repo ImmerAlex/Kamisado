@@ -36,7 +36,8 @@ public class HoleBoard extends ContainerElement {
         String currentPlayerName = gameStage.getCurrentPlayerName();
         int[][] directions;
 
-        if (currentPlayerName.equals("Player X") || currentPlayerName.equals("Computer X")) {
+        if (currentPlayerName.equals("Player X") ||
+                currentPlayerName.equals("Computer X")) {
             // Up, Up-Right, Up-Left
             directions = new int[][]{{0, -1}, {1, -1}, {-1, -1}};
         } else {

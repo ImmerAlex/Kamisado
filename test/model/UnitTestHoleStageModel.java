@@ -1,5 +1,6 @@
 package model;
 import boardifier.model.Model;
+import boardifier.model.TextElement;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,4 +20,5 @@ public class UnitTestHoleStageModel {
         assertFalse(model.isValidCoordinates(9, 0));
         assertFalse(model.isValidCoordinates(0, 9));
     }
+
 }
