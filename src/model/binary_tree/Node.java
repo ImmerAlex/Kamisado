@@ -30,17 +30,20 @@ public class Node {
     }
 
     public void addRecursive(int value, String coup) {
-        if (value < this.point) {
-            if (left == null) {
-                left = new Node(value, coup);
-            } else {
-                left.addRecursive(value, coup);
-            }
-        } else {
+        // If coup already exists, we don't add it we just update the point
+        if (this.coup.equals(coup)) {
+            this.point = value;
+        } else if (value > this.point) {
             if (right == null) {
                 right = new Node(value, coup);
             } else {
                 right.addRecursive(value, coup);
+            }
+        } else {
+            if (left == null) {
+                left = new Node(value, coup);
+            } else {
+                left.addRecursive(value, coup);
             }
         }
     }

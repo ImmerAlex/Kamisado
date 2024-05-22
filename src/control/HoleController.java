@@ -60,6 +60,11 @@ public class HoleController extends Controller {
                         System.out.print(p.getName() + " from > ");
                         lineFrom = consoleIn.readLine();
 
+                        if (!stage.goodFromEntry(lineFrom)) {
+                            System.out.println("Incorrect entry. Retry !");
+                            continue;
+                        }
+
                         if (!stage.canMoveFrom(lineFrom)) {
                             System.out.println(model.getGameStage().getCurrentPlayerName() + " cannot move. Pass turn.");
                             ok = true;
