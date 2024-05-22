@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 import boardifier.model.GameException;
 import boardifier.view.View;
 import control.HoleController;
@@ -6,19 +8,34 @@ import boardifier.control.StageFactory;
 import boardifier.model.Model;
 
 public class HoleConsole {
+    public static final Scanner input = new Scanner(System.in);
 
     public static void main(String[] args) {
 //        Logger.setLevel(Logger.LOGGER_TRACE);
 //        Logger.setVerbosity(Logger.VERBOSE_HIGH);
 
-        int mode = 0;
-        if (args.length == 1) {
-            try {
-                mode = Integer.parseInt(args[0]);
-                if ((mode <0) || (mode>2)) mode = 0;
+        System.out.println("Choose the game mode:");
+        System.out.println("\t0: Human vs Human");
+        System.out.println("\t1: Human vs Computer");
+        System.out.println("\t2: Computer vs Computer");
+
+        int mode = -1;
+        do {
+            System.out.print("Your choice: ");
+            String choice = input.nextLine();
+            if (choice.equals("0")) {
+                mode = 0;
+                break;
+            } else if (choice.equals("1")) {
+                mode = 1;
+                break;
+            } else if (choice.equals("2")) {
+                mode = 2;
+                break;
+            } else {
+                System.out.println("Invalid choice. Please try again.");
             }
-            catch(NumberFormatException ignored) {}
-        }
+        } while (true);
 
         Model model = new Model();
 

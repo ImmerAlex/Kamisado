@@ -21,6 +21,7 @@ public class HoleSmartDecider extends Decider {
     private static final Random loto = new Random(Calendar.getInstance().getTimeInMillis());
     private View view;
     private Tree tree;
+    private List<String> listOfPossibleMove;
 
 
     public HoleSmartDecider(Model model, Controller control, View view) {
@@ -53,21 +54,10 @@ public class HoleSmartDecider extends Decider {
                 if (!stage.goodFromEntry(rowFrom, colFrom)) throw new Exception();
                 if (!stage.canMoveFrom(from)) throw new Exception();
 
+                setAllPossibleMove(board, tree);
 
-                String win = winingMove(stage, board);
-                if (win != null) {
-                    tree.add(50, win);
-                }
+                getWiningMove(stage, board, tree);
 
-
-                String moveToLeadToWin = getMoveToLeadToWin(stage, board);
-                if (moveToLeadToWin != null) {
-                    tree.add(30, moveToLeadToWin);
-                }
-
-
-                String randomMove = chooseRandomMove(board);
-                tree.add(0, randomMove);
 
                 to = tree.getBestCoup();
 
@@ -96,7 +86,7 @@ public class HoleSmartDecider extends Decider {
         return actions;
     }
 
-    private String winingMove(HoleStageModel stage, HoleBoard board) {
+    private void getWiningMove(HoleStageModel stage, HoleBoard board, Tree tree) {
         boolean[][] reachableCells = board.getReachableCells();
 
         int winingSide = stage.getCurrentPlayerName().equals("Player X") || stage.getCurrentPlayerName().equals("Computer X") ? 0 : 7;
@@ -104,49 +94,44 @@ public class HoleSmartDecider extends Decider {
         for (int i = 0; i < board.getNbCols(); i++) {
             System.out.println("move to " + (char) (i + 'A') + (char) (winingSide + '1') + " : " + reachableCells[winingSide][i]);
             if (reachableCells[winingSide][i]) {
-                return "" + (char) (i + 'A') + (char) (winingSide + '1');
+                tree.add(50, "" + (char) (i + 'A') + (char) (winingSide + '1'));
             }
         }
+    }
+
+    private String setLoosingMove(HoleStageModel stage, HoleBoard board, Tree tree) {
+        char[][] minimalBoard = createMinimalBoard(board);
+        displayCharBoard(minimalBoard);
 
         return null;
     }
 
-    private String getMoveToLeadToWin(HoleStageModel stage, HoleBoard board) {
-        HoleStageModel newStage = stage.copy();
-        HoleBoard newBoard = newStage.getBoard();
+    private char[][] createMinimalBoard(HoleBoard board) {
+        char[][] minimalBoard = new char[board.getNbCols()][board.getNbRows()];
 
         for (int i = 0; i < board.getNbCols(); i++) {
             for (int j = 0; j < board.getNbRows(); j++) {
-                if (board.getElement(i, j) instanceof Pawn pawn) {
-                    if (pawn.getSymbol() == 'X' && (stage.getCurrentPlayerName().equals("Player X") || stage.getCurrentPlayerName().equals("Computer X"))) {
-                        if (newBoard.canReachCell("" + (char) (j + 'A') + (char) (i + '1'))) {
-                            return "" + (char) (j + 'A') + (char) (i + '1');
-                        }
-                    } else if (pawn.getSymbol() == 'O' && (stage.getCurrentPlayerName().equals("Player O") || stage.getCurrentPlayerName().equals("Computer O"))) {
-                        if (newBoard.canReachCell("" + (char) (j + 'A') + (char) (i + '1'))) {
-                            return "" + (char) (j + 'A') + (char) (i + '1');
-                        }
-                    }
+                if (board.getElement(i, j) != null) {
+                    minimalBoard[i][j] = ((Pawn) board.getElement(i, j)).getSymbol();
+                } else {
+                    minimalBoard[i][j] = ' ';
                 }
             }
         }
 
-        return null;
+        return minimalBoard;
     }
 
-    private String chooseRandomMove(HoleBoard board) {
+    private void setAllPossibleMove(HoleBoard board, Tree tree) {
         boolean[][] reachableCells = board.getReachableCells();
-        List<String> moves = new ArrayList<>();
 
         for (int i = 0; i < board.getNbCols(); i++) {
             for (int j = 0; j < board.getNbRows(); j++) {
                 if (reachableCells[j][i]) {
-                    moves.add("" + (char) (i + 'A') + (char) (j + '1'));
+                    tree.add(0, "" + (char) (i + 'A') + (char) (j + '1'));
                 }
             }
         }
-
-        return moves.get(loto.nextInt(moves.size()));
     }
 
 
@@ -156,7 +141,17 @@ public class HoleSmartDecider extends Decider {
 
 
 
-
+    private void displayCharBoard(char[][] board) {
+        System.out.println("[");
+        for (int i = 0; i < board.length; i++) {
+            System.out.print("\t[");
+            for (int j = 0; j < board[i].length; j++) {
+                System.out.print(board[i][j] + ", ");
+            }
+            System.out.println("]");
+        }
+        System.out.println("[");
+    }
 
     private void displayReachableCells(boolean[][] reachableCells) {
         System.out.println("[");
