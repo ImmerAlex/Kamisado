@@ -33,7 +33,6 @@ public class HoleSmartDecider extends Decider {
         }
     }
 
-
     public HoleSmartDecider(Model model, Controller control, View view) {
         super(model, control);
         this.view = view;
@@ -45,26 +44,16 @@ public class HoleSmartDecider extends Decider {
         HoleStageModel stage = (HoleStageModel) model.getGameStage();
         HoleBoard board = stage.getBoard();
         boolean ok = false;
-        String from, to = null;
-        int rowFrom = -1, colFrom = -1;
+        String from, to;
 
         while (!ok) {
             try {
-                if (stage.isFirstPlayer()) {
-                    from = stage.getFirstFromPlay();
-                    System.out.println("From getFirstFromPlay: " + from);
-                } else {
-                    from = stage.findPawnFrom();
-                    System.out.println("From findPawnFrom: " + from);
-                }
+                from = stage.isFirstPlayer() ? stage.getFirstFromPlay() : stage.findPawnFrom();
+                int rowFrom = from.charAt(0) - 'A';
+                int colFrom = from.charAt(1) - '1';
 
-                rowFrom = from.charAt(0) - 'A';
-                colFrom = from.charAt(1) - '1';
-
-                if (!stage.isValidCoordinates(rowFrom, colFrom)) throw new Exception();
-                if (!stage.goodFromEntry(rowFrom, colFrom)) throw new Exception();
-                if (!stage.canMoveFrom(from)) {
-                    if (noOneCanMove(board)) { //TODO: Implement noOneCanMove
+                if (!stage.isValidCoordinates(rowFrom, colFrom) || !stage.goodFromEntry(rowFrom, colFrom) || !stage.canMoveFrom(from)) {
+                    if (noOneCanMove(stage, board)) {
                         System.out.println("No one can move. End of game.");
                         System.exit(0);
                     }
@@ -74,13 +63,10 @@ public class HoleSmartDecider extends Decider {
                 }
 
                 setAllPossibleMove(board);
-
                 setWiningMove(stage, board);
-
                 setLoosingMove(stage, board);
 
                 to = tree.getBestCoup();
-
                 int rowTo = to.charAt(0) - 'A';
                 int colTo = to.charAt(1) - '1';
 
@@ -88,14 +74,12 @@ public class HoleSmartDecider extends Decider {
                 stage.setFirstPlayer(false);
 
                 Pawn pawn = (Pawn) board.getElement(colFrom, rowFrom);
-
                 ActionList actions = ActionFactory.generateMoveWithinContainer(model, pawn, colTo, rowTo);
                 actions.setDoEndOfTurn(true);
 
                 stage.isWin();
 
                 return actions;
-
             } catch (Exception ignored) {}
         }
 
@@ -104,30 +88,28 @@ public class HoleSmartDecider extends Decider {
 
     private void setWiningMove(HoleStageModel stage, HoleBoard board) {
         boolean[][] reachableCells = board.getReachableCells();
-
-        int winingSide = stage.getCurrentPlayerName().equals("Player X") || stage.getCurrentPlayerName().equals("Computer X") ? 0 : 7;
+        int winningSide = stage.getCurrentPlayerName().contains("X") ? 0 : 7;
 
         for (int i = 0; i < board.getNbCols(); i++) {
-            if (reachableCells[winingSide][i]) {
-                tree.add(50, "" + (char) (i + 'A') + (char) (winingSide + '1'));
+            if (reachableCells[winningSide][i]) {
+                tree.add(50, "" + (char) (i + 'A') + (winningSide + 1));
             }
         }
     }
 
-    private String setLoosingMove(HoleStageModel stage, HoleBoard board) {
+    private void setLoosingMove(HoleStageModel stage, HoleBoard board) {
         MinimalBoard[][] minimalBoardBase = createMinimalBoard(board);
         List<String> validMoveCurrentPlayer = getValidCurrentPlayerMove(board);
-        String enemyName = stage.getCurrentPlayerName().equals("Player X") || stage.getCurrentPlayerName().equals("Computer X") ? "Player O" : "Player X";
+        String enemyName = stage.getCurrentPlayerName().contains("X") ? "Player O" : "Player X";
 
         for (String move : validMoveCurrentPlayer) {
             MinimalBoard[][] minimalBoard = minimalBoardBase.clone();
-
             int row = move.charAt(0) - 'A';
             int col = move.charAt(1) - '1';
 
             String boardColorLock = stage.getBoardColor(stage, view, row, col);
             int[] coordPawnEnemy = findPawnFrom(minimalBoardBase, boardColorLock, enemyName);
-            List<String> validMoveEnemyPlayer = getValideCellsMove(minimalBoard, coordPawnEnemy[1], coordPawnEnemy[0], enemyName);
+            List<String> validMoveEnemyPlayer = getValidCellsMove(minimalBoard, coordPawnEnemy[1], coordPawnEnemy[0], enemyName);
 
             for (String enemyMove : validMoveEnemyPlayer) {
                 if (winingMoveX.contains(enemyMove) || winingMoveO.contains(enemyMove)) {
@@ -135,13 +117,11 @@ public class HoleSmartDecider extends Decider {
                 }
             }
         }
-
-        return null;
     }
 
     public int[] findPawnFrom(MinimalBoard[][] minimalBoardBase, String boardColorLock, String enemyPlayerName) {
         int[] coords = new int[2];
-        char symboleToFound = enemyPlayerName.equals("Player X") || enemyPlayerName.equals("Computer X") ? 'X' : 'O';
+        char symboleToFound = enemyPlayerName.contains("X") ? 'X' : 'O';
         int idColor = ConsoleColor.getColorId(boardColorLock);
 
         for (int i = 0; i < minimalBoardBase.length; i++) {
@@ -149,6 +129,7 @@ public class HoleSmartDecider extends Decider {
                 if (minimalBoardBase[i][j].getSymbol() == symboleToFound && minimalBoardBase[i][j].getIdColor() == idColor) {
                     coords[0] = i;
                     coords[1] = j;
+                    return coords;
                 }
             }
         }
@@ -162,11 +143,7 @@ public class HoleSmartDecider extends Decider {
         for (int i = 0; i < board.getNbCols(); i++) {
             for (int j = 0; j < board.getNbRows(); j++) {
                 Pawn pawn = (Pawn) board.getElement(i, j);
-                if (pawn != null) {
-                    minimalBoard[i][j] = new MinimalBoard(pawn.getSymbol(), pawn.getColor());
-                } else {
-                    minimalBoard[i][j] = new MinimalBoard('N', -1);
-                }
+                minimalBoard[i][j] = pawn != null ? new MinimalBoard(pawn.getSymbol(), pawn.getColor()) : new MinimalBoard('N', -1);
             }
         }
 
@@ -179,24 +156,15 @@ public class HoleSmartDecider extends Decider {
         for (int i = 0; i < board.getNbCols(); i++) {
             for (int j = 0; j < board.getNbRows(); j++) {
                 if (reachableCells[i][j]) {
-                    tree.add(0, "" + (char) (j + 'A') + (char) (i + '1'));
+                    tree.add(0, "" + (char) (j + 'A') + (i + 1));
                 }
             }
         }
     }
 
-    public List<String> getValideCellsMove(MinimalBoard[][] minimalBoard, int row, int col, String playerName) {
+    public List<String> getValidCellsMove(MinimalBoard[][] minimalBoard, int row, int col, String playerName) {
         List<String> lst = new ArrayList<>();
-        int[][] directions;
-
-
-        if (playerName.equals("Player X") || playerName.equals("Computer X")) {
-            // Up, Up-Right, Up-Left
-            directions = new int[][]{{0, -1}, {1, -1}, {-1, -1}};
-        } else {
-            // Down, Down-Right, Down-Left
-            directions = new int[][]{{1, 0}, {-1, 1}, {1, 1}};
-        }
+        int[][] directions = playerName.contains("X") ? new int[][]{{0, -1}, {1, -1}, {-1, -1}} : new int[][]{{0, 1}, {1, 1}, {-1, 1}};
 
         for (int[] dir : directions) {
             int dx = dir[0], dy = dir[1];
@@ -204,16 +172,14 @@ public class HoleSmartDecider extends Decider {
 
             while (x >= 0 && x < 8 && y >= 0 && y < 8) {
                 if (minimalBoard[y][x].getSymbol() == 'N') {
-                    lst.add("" + (char) (x + 'A') + (char) (y + '1'));
+                    lst.add("" + (char) (x + 'A') + (y + 1));
                 } else {
                     break;
                 }
-
                 x += dx;
                 y += dy;
             }
         }
-
 
         return lst;
     }
@@ -225,7 +191,7 @@ public class HoleSmartDecider extends Decider {
         for (int i = 0; i < board.getNbCols(); i++) {
             for (int j = 0; j < board.getNbRows(); j++) {
                 if (reachableCells[i][j]) {
-                    lst.add("" + (char) (j + 'A') + (char) (i + '1'));
+                    lst.add("" + (char) (j + 'A') + (i + 1));
                 }
             }
         }
@@ -233,32 +199,30 @@ public class HoleSmartDecider extends Decider {
         return lst;
     }
 
-
-
-
-
-
-    private void displayCharBoard(MinimalBoard[][] board) {
-        System.out.println("[");
-        for (int i = 0; i < board.length; i++) {
-            System.out.print("\t[");
-            for (int j = 0; j < board[i].length; j++) {
-                System.out.print(board[i][j] + ", ");
-            }
-            System.out.println("]");
+    public boolean noOneCanMove(HoleStageModel stage, HoleBoard board) {
+        for (Pawn pawn : stage.getXPawns()) {
+            if (canPawnMove(stage, board, pawn, "Player X")) return false;
         }
-        System.out.println("[");
+
+        for (Pawn pawn : stage.getOPawns()) {
+            if (canPawnMove(stage, board, pawn, "Player O")) return false;
+        }
+
+        return true;
     }
 
-    private void displayReachableCells(boolean[][] reachableCells) {
-        System.out.println("[");
-        for (int i = 0; i < reachableCells.length; i++) {
-            System.out.print("\t[");
-            for (int j = 0; j < reachableCells[i].length; j++) {
-                System.out.print(reachableCells[i][j] + ", ");
-            }
-            System.out.println("]");
+    private boolean canPawnMove(HoleStageModel stage, HoleBoard board, Pawn pawn, String playerName) {
+        int x = (int) pawn.getLocation().getX();
+        int y = (int) pawn.getLocation().getY();
+        int computeX = stage.reverseComputeX(x);
+        int computeY = stage.reverseComputeY(y) + 1;
+
+        Pawn tempPawn = (Pawn) board.getElement(computeY, computeX);
+        if (tempPawn != null && ConsoleColor.getColorValue(tempPawn.getStringColor()).equals(stage.getLockedColor())) {
+            List<String> validMoves = getValidCellsMove(createMinimalBoard(board), computeX, computeY, playerName);
+            return !validMoves.isEmpty();
         }
-        System.out.println("[");
+
+        return false;
     }
 }

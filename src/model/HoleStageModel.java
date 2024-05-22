@@ -174,10 +174,6 @@ public class HoleStageModel extends GameStageModel {
         return false;
     }
 
-    public boolean noOneCanMove() {
-
-    }
-
     public void setLockedColor(HoleStageModel gameStage, View view, int rowTo, int colTo) {
         int x = computeX(rowTo);
         int y = computeY(colTo) - 1;
@@ -199,6 +195,15 @@ public class HoleStageModel extends GameStageModel {
     private int computeY(int col) {
         return 3 + (2 * col);
     }
+
+    public int reverseComputeX(int x) {
+        return (x - 2) / 8;
+    }
+
+    public int reverseComputeY(int y) {
+        return (y - 3) / 2;
+    }
+
 
     public void isWin() {
         for (int i = 0; i < 8; i++) {
