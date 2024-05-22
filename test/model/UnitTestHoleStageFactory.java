@@ -1,6 +1,7 @@
 package model;
 
 import boardifier.model.Model;
+import boardifier.model.TextElement;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,18 +12,27 @@ class UnitTestHoleStageFactory {
     private Model model;
     private HoleStageModel stageModel;
     private HoleStageFactory factory;
+    private TextElement text;
 
-    @Test
     @BeforeEach
     void init() {
         model = new Model();
         stageModel = new HoleStageModel("HoleConsole", model);
         factory = new HoleStageFactory(stageModel);
+
+        model.addHumanPlayer("Player X");
+        model.addComputerPlayer("Player O");
+
         factory.setup();
     }
 
     @Test
     void testSetup() {
+        text = stageModel.getPlayerName();
+        assertNotNull(text);
+        assertEquals(0, text.getX());
+        assertEquals(0, text.getY());
+
 
         HoleBoard board = stageModel.getBoard();
         assertNotNull(board);

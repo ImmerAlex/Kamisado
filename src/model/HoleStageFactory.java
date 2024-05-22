@@ -34,10 +34,9 @@ public class HoleStageFactory extends StageElementsFactory {
 
     @Override
     public void setup() {
-//        TextElement text = new TextElement(stageModel.getCurrentPlayerName(), stageModel);
-//        text.setLocation(0,0);
-//        stageModel.setPlayerName(text);
-// A fixer
+        TextElement text = new TextElement(stageModel.getCurrentPlayerName(), stageModel);
+        text.setLocation(0,0);
+        stageModel.setPlayerName(text);
 
         HoleBoard board = new HoleBoard(0, 1, 8, 8, stageModel);
         stageModel.setBoard(board);
