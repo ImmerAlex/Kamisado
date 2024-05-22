@@ -35,8 +35,8 @@ import java.util.List;
 public class HoleStageModel extends GameStageModel {
     // define stage game elements
     private HoleBoard board;
-    private List<Pawn> XPawns;
-    private List<Pawn> OPawns;
+    private List<Pawn> xPawns;
+    private List<Pawn> oPawns;
     private TextElement playerName;
     private boolean firstPlayer;
     private String lockedColor;
@@ -59,25 +59,21 @@ public class HoleStageModel extends GameStageModel {
     }
 
     public List<Pawn> getXPawns() {
-        return XPawns;
+        return xPawns;
     }
 
     public void setXPawns(List<Pawn> pawns) {
-        XPawns = pawns;
-        for (Pawn pawn : XPawns) {
-            addElement(pawn);
-        }
+        xPawns = pawns;
+        pawns.forEach(pawn -> addElement(pawn)); // Intellij want to replace with pawns.forEach(this::addElement);
     }
 
     public List<Pawn> getOPawns() {
-        return OPawns;
+        return oPawns;
     }
 
     public void setOPawns(List<Pawn> pawns) {
-        OPawns = pawns;
-        for (Pawn pawn : OPawns) {
-            addElement(pawn);
-        }
+        oPawns = pawns;
+        pawns.forEach(pawn -> addElement(pawn)); // Intellij want to replace with pawns.forEach(this::addElement);
     }
 
     public TextElement getPlayerName() {
@@ -104,12 +100,9 @@ public class HoleStageModel extends GameStageModel {
 
     public String getFirstFromPlay() {
         List<String> froms = new ArrayList<>();
-
         for (int i = 0; i < board.getNbCols(); i++) {
             froms.add((char) (i + 'A') + "8");
         }
-
-
         return froms.get((int) (Math.random() * froms.size()));
     }
 
@@ -124,45 +117,39 @@ public class HoleStageModel extends GameStageModel {
                 }
             }
         }
-
         return null;
     }
 
     public boolean goodFromEntry(int row, int col) {
         String currentPlayer = getCurrentPlayerName();
         GameElement element = getBoard().getElement(col, row);
-
         if (element instanceof Pawn pawn) {
             if (pawn.getSymbol() == 'X' && (currentPlayer.equals("Player X") || currentPlayer.equals("Computer X"))) {
                 return true;
-            } else
-                return pawn.getSymbol() == 'O' && (currentPlayer.equals("Player O") || currentPlayer.equals("Computer O"));
+            } else if (pawn.getSymbol() == 'O' && (currentPlayer.equals("Player O") || currentPlayer.equals("Computer O"))) {
+                return true;
+            }
         }
-
         return false;
     }
 
     public boolean goodFromEntry(String from) {
         int row = from.charAt(0) - 'A';
         int col = from.charAt(1) - '1';
-        if (!isValidCoordinates(row, col)) return false;
-        return goodFromEntry(row, col);
+        return isValidCoordinates(row, col) && goodFromEntry(row, col);
     }
 
     public boolean canMoveFrom(String lineFrom) {
         int rowFrom = lineFrom.charAt(0) - 'A';
         int colFrom = lineFrom.charAt(1) - '1';
-        if (!isValidCoordinates(rowFrom, colFrom)) return false;
-        return hasReachableCells(model, rowFrom, colFrom);
+        return isValidCoordinates(rowFrom, colFrom) && hasReachableCells(model, rowFrom, colFrom);
     }
 
     private boolean hasReachableCells(Model model, int row, int col) {
         HoleStageModel gameStage = (HoleStageModel) model.getGameStage();
         HoleBoard board = gameStage.getBoard();
-
         board.setValidCells(gameStage, row, col);
         boolean[][] reachableCells = board.getReachableCells();
-
         for (boolean[] cells : reachableCells) {
             for (boolean cell : cells) {
                 if (cell) {
@@ -170,7 +157,6 @@ public class HoleStageModel extends GameStageModel {
                 }
             }
         }
-
         return false;
     }
 
@@ -204,13 +190,11 @@ public class HoleStageModel extends GameStageModel {
         return (y - 3) / 2;
     }
 
-
     public void isWin() {
         for (int i = 0; i < 8; i++) {
             Pawn pawnXWin = (Pawn) board.getElement(0, i);
             Pawn pawnOWin = (Pawn) board.getElement(7, i);
-
-            if (pawnXWin!= null && pawnXWin.getSymbol() == 'X') {
+            if (pawnXWin != null && pawnXWin.getSymbol() == 'X') {
                 model.setIdWinner(0);
                 model.stopStage();
             } else if (pawnOWin != null && pawnOWin.getSymbol() == 'O') {
@@ -223,8 +207,8 @@ public class HoleStageModel extends GameStageModel {
     public HoleStageModel copy() {
         HoleStageModel copy = new HoleStageModel(getName(), model);
         copy.setBoard(board.copy());
-        copy.setXPawns(new ArrayList<>(XPawns));
-        copy.setOPawns(new ArrayList<>(OPawns));
+        copy.setXPawns(new ArrayList<>(xPawns));
+        copy.setOPawns(new ArrayList<>(oPawns));
         copy.setPlayerName(playerName.copy());
         copy.setFirstPlayer(firstPlayer);
         copy.setLockedColor(lockedColor);
