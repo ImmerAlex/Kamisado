@@ -1,7 +1,6 @@
 package model;
 import boardifier.model.GameStageModel;
 import boardifier.model.Model;
-import boardifier.model.TextElement;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -9,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import org.mockito.mock.*;
 
 import java.awt.*;
 import java.util.List;
@@ -45,18 +43,77 @@ public class UnitTestHoleBoard {
         when(mockGameStage.getBoard()).thenReturn(holeBoard);
         when(mockGameStage.getCurrentPlayerName()).thenReturn("Player X");
 
-        List<Point> result = holeBoard.computeValidCells(mockGameStage, 0, 0);
-        System.out.println(result);
+        List<Point> result = holeBoard.computeValidCells(mockGameStage, 0, 7);
+
+        assertFalse(result.isEmpty());
+
+        for (Point point : result) {
+            assertTrue(point.x >= 0 && point.x < holeBoard.getNbRows());
+            assertTrue(point.y >= 0 && point.y < holeBoard.getNbCols());
+        }
+
+        List<Point> noResult = holeBoard.computeValidCells(mockGameStage, 0, 0);
+
+        assertTrue(noResult.isEmpty());
     }
 
-    @Disabled
+    @Test
+    void testComputeValidCellsForComputerX() {
+        when(mockGameStage.getBoard()).thenReturn(holeBoard);
+        when(mockGameStage.getCurrentPlayerName()).thenReturn("Computer X");
+
+        List<Point> result = holeBoard.computeValidCells(mockGameStage, 0, 7);
+
+        assertFalse(result.isEmpty());
+
+        for (Point point : result) {
+            assertTrue(point.x >= 0 && point.x < holeBoard.getNbRows());
+            assertTrue(point.y >= 0 && point.y < holeBoard.getNbCols());
+        }
+
+        List<Point> noResult = holeBoard.computeValidCells(mockGameStage, 0, 0);
+
+        assertTrue(noResult.isEmpty());
+    }
+
     @Test
     void testComputeValidCellsForPlayerO() {
         when(mockGameStage.getBoard()).thenReturn(holeBoard);
         when(mockGameStage.getCurrentPlayerName()).thenReturn("Player O");
 
-        List<Point> result = holeBoard.computeValidCells(mockGameStage, 0, 7);
+        List<Point> result = holeBoard.computeValidCells(mockGameStage, 0, 0);
+
+        assertFalse(result.isEmpty());
+
+        for (Point point : result) {
+            assertTrue(point.x >= 0 && point.x < holeBoard.getNbRows());
+            assertTrue(point.y >= 0 && point.y < holeBoard.getNbCols());
+        }
+
+        List<Point> noResult = holeBoard.computeValidCells(mockGameStage, 7, 7);
+
+        assertTrue(noResult.isEmpty());
     }
+
+    @Test
+    void testComputeValidCellsForComputerO() {
+        when(mockGameStage.getBoard()).thenReturn(holeBoard);
+        when(mockGameStage.getCurrentPlayerName()).thenReturn("Computer O");
+
+        List<Point> result = holeBoard.computeValidCells(mockGameStage, 0, 0);
+
+        assertFalse(result.isEmpty());
+
+        for (Point point : result) {
+            assertTrue(point.x >= 0 && point.x < holeBoard.getNbRows());
+            assertTrue(point.y >= 0 && point.y < holeBoard.getNbCols());
+        }
+
+        List<Point> noResult = holeBoard.computeValidCells(mockGameStage, 7, 7);
+
+        assertTrue(noResult.isEmpty());
+    }
+
 
     @Test
     void testCopy() {
