@@ -91,6 +91,7 @@ public class HoleController extends Controller {
                 }
             }
         }
+        stage.isWin();
     }
 
     public void endOfTurn() {
@@ -130,8 +131,6 @@ public class HoleController extends Controller {
 
         ActionPlayer play = new ActionPlayer(model, this, actions);
         play.start();
-
-        stage.isWin(rowTo, colTo);
 
         return true;
     }

@@ -91,7 +91,7 @@ public class HoleSmartDecider extends Decider {
         ActionList actions = ActionFactory.generateMoveWithinContainer(model, pawn, colTo, rowTo);
         actions.setDoEndOfTurn(true); // after playing this action list, it will be the end of turn for current player.
 
-        stage.isWin(rowTo, colTo);
+        stage.isWin();
 
         return actions;
     }

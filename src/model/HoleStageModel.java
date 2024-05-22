@@ -180,14 +180,15 @@ public class HoleStageModel extends GameStageModel {
         return 3 + (2 * col);
     }
 
-    public void isWin(int row, int col) {
-        GameElement element = board.getElement(col, row);
+    public void isWin() {
+        for (int i = 0; i < 8; i++) {
+            Pawn pawnXWin = (Pawn) board.getElement(0, i);
+            Pawn pawnOWin = (Pawn) board.getElement(7, i);
 
-        if (element instanceof Pawn pawn) {
-            if (pawn.getSymbol() == 'X' && col == 0) {
+            if (pawnXWin!= null && pawnXWin.getSymbol() == 'X') {
                 model.setIdWinner(0);
                 model.stopStage();
-            } else if (pawn.getSymbol() == 'O' && col == 7) {
+            } else if (pawnOWin != null && pawnOWin.getSymbol() == 'O') {
                 model.setIdWinner(1);
                 model.stopStage();
             }
