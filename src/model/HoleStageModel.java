@@ -86,6 +86,7 @@ public class HoleStageModel extends GameStageModel {
 
     public void setPlayerName(TextElement text) {
         playerName = text;
+        addElement(text);
     }
 
     public boolean isFirstPlayer() {

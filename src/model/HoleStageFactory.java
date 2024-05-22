@@ -36,7 +36,7 @@ public class HoleStageFactory extends StageElementsFactory {
         text.setLocation(0, 0);
         stageModel.setPlayerName(text);
 
-        HoleBoard board = new HoleBoard(0, 0, 8, 8, stageModel);
+        HoleBoard board = new HoleBoard(0, 1, 8, 8, stageModel);
         stageModel.setBoard(board);
         stageModel.addElement(board);
 
