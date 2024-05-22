@@ -16,14 +16,19 @@ public class Tree {
     }
 
     public String getBestCoup() {
-        return getBestCoupRecursive(root);
+        return getBestCoupRecursive(root, root.getCoup(), root.getPoint());
     }
 
-    private String getBestCoupRecursive(Node node) {
-        if (node.getRight() == null) {
-            return node.getCoup();
+    private String getBestCoupRecursive(Node node, String bestCoup, int bestPoint) {
+        if (node == null) {
+            return bestCoup;
         }
-        return getBestCoupRecursive(node.getRight());
+        if (node.getPoint() > bestPoint) {
+            bestCoup = node.getCoup();
+            bestPoint = node.getPoint();
+        }
+        bestCoup = getBestCoupRecursive(node.getLeft(), bestCoup, bestPoint);
+        return getBestCoupRecursive(node.getRight(), bestCoup, bestPoint);
     }
 
     public void display () {
