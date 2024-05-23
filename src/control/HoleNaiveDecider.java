@@ -65,15 +65,12 @@ public class HoleNaiveDecider extends Decider {
 
                 setAllPossibleMove(board, rowFrom, colFrom);
 
-                tree.display();
-
                 List<Node> nodes = tree.getAll10Point();
 
                 if (nodes == null || nodes.size() == 0) {
                     to = getRandomCoup();
                 } else {
                     int index = loto.nextInt(nodes.size());
-                    System.out.println("Index: " + index);
                     to = nodes.get(index).getCoup();
                 }
 
@@ -105,63 +102,6 @@ public class HoleNaiveDecider extends Decider {
         return coups.get(randomIndex);
     }
 
-    private void setWiningMove(HoleStageModel stage, HoleBoard board) {
-        boolean[][] reachableCells = board.getReachableCells();
-        int winningSide = stage.getCurrentPlayerName().contains("X") ? 0 : 7;
-
-        for (int i = 0; i < board.getNbCols(); i++) {
-            if (reachableCells[winningSide][i]) {
-                tree.add(50, "" + (char) (i + 'A') + (winningSide + 1));
-            }
-        }
-    }
-
-    private void setLoosingMove(HoleStageModel stage, HoleBoard board, String from) {
-        MinimalBoard[][] minimalBoardBase = createMinimalBoard(board);
-        List<String> validMoveCurrentPlayer = getValidCurrentPlayerMove(board);
-        String enemyName = stage.getCurrentPlayerName().contains("X") ? "Player O" : "Player X";
-
-        int rowFrom = from.charAt(0) - 'A';
-        int colFrom = from.charAt(1) - '1';
-
-        for (String move : validMoveCurrentPlayer) {
-            MinimalBoard[][] minimalBoard = cloneMinimalBoard(minimalBoardBase);
-            int row = move.charAt(0) - 'A';
-            int col = move.charAt(1) - '1';
-
-            minimalBoard[col][row] = minimalBoardBase[colFrom][rowFrom];
-            minimalBoard[colFrom][rowFrom] = new MinimalBoard('N', -1);
-
-            String boardColorLock = stage.getBoardColor(stage, view, row, col);
-            int[] coordPawnEnemy = findPawnFrom(minimalBoardBase, boardColorLock, enemyName);
-            List<String> validMoveEnemyPlayer = getValidCellsMove(minimalBoard, coordPawnEnemy[1], coordPawnEnemy[0], enemyName);
-
-            for (String enemyMove : validMoveEnemyPlayer) {
-                if (winingMoveX.contains(enemyMove) || winingMoveO.contains(enemyMove)) {
-                    tree.add(-50, move);
-                }
-            }
-        }
-    }
-
-    public int[] findPawnFrom(MinimalBoard[][] minimalBoardBase, String boardColorLock, String enemyPlayerName) {
-        int[] coords = new int[2];
-        char symboleToFound = enemyPlayerName.contains("X") ? 'X' : 'O';
-        int idColor = ConsoleColor.getColorId(boardColorLock);
-
-        for (int i = 0; i < minimalBoardBase.length; i++) {
-            for (int j = 0; j < minimalBoardBase[i].length; j++) {
-                if (minimalBoardBase[i][j].getSymbol() == symboleToFound && minimalBoardBase[i][j].getIdColor() == idColor) {
-                    coords[0] = i;
-                    coords[1] = j;
-                    return coords;
-                }
-            }
-        }
-
-        return coords;
-    }
-
     private MinimalBoard[][] createMinimalBoard(HoleBoard board) {
         MinimalBoard[][] minimalBoard = new MinimalBoard[board.getNbCols()][board.getNbRows()];
 
@@ -175,26 +115,11 @@ public class HoleNaiveDecider extends Decider {
         return minimalBoard;
     }
 
-    private MinimalBoard[][] cloneMinimalBoard(MinimalBoard[][] minimalBoardBase) {
-        MinimalBoard[][] minimalBoard = new MinimalBoard[minimalBoardBase.length][minimalBoardBase[0].length];
-
-        for (int i = 0; i < minimalBoardBase.length; i++) {
-            for (int j = 0; j < minimalBoardBase[i].length; j++) {
-                minimalBoard[i][j] = new MinimalBoard(minimalBoardBase[i][j].getSymbol(), minimalBoardBase[i][j].getIdColor());
-            }
-        }
-
-        return minimalBoard;
-    }
-
     private void setAllPossibleMove(HoleBoard board, int rowFrom, int colFrom) {
         boolean[][] reachableCells = board.getReachableCells();
 
-        // rowFrom represent the x coordinate and colFrom represent the y coordinate
-
         for (int i = 0; i < board.getNbCols(); i++) {
             for (int j = 0; j < board.getNbRows(); j++) {
-               // If reachableCells[i][j] is in the same column add move with 10 point
                 if (reachableCells[i][j] && j == rowFrom) {
                     tree.add(10, "" + (char) (j + 'A') + (i + 1));
                 } else if (reachableCells[i][j] && j != rowFrom) {
@@ -266,29 +191,5 @@ public class HoleNaiveDecider extends Decider {
         }
 
         return false;
-    }
-
-    public void displayMinimalBoard(MinimalBoard[][] minimalBoard) {
-        System.out.println("[");
-        for (MinimalBoard[] boards : minimalBoard) {
-            System.out.print("\t[");
-            for (MinimalBoard board : boards) {
-                System.out.print(board + ", ");
-            }
-            System.out.println("]");
-        }
-        System.out.println("]");
-    }
-
-    public void displayReachableCells(boolean[][] reachableCells) {
-        System.out.println("[");
-        for (boolean[] cells : reachableCells) {
-            System.out.print("\t[");
-            for (boolean cell : cells) {
-                System.out.print(cell + ", ");
-            }
-            System.out.println("]");
-        }
-        System.out.println("]");
     }
 }
