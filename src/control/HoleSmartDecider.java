@@ -248,7 +248,7 @@ public class HoleSmartDecider extends Decider {
         return true;
     }
 
-    private boolean canPawnMove(HoleStageModel stage, HoleBoard board, Pawn pawn, String playerName) {
+    public boolean canPawnMove(HoleStageModel stage, HoleBoard board, Pawn pawn, String playerName) {
         int x = (int) pawn.getLocation().getX();
         int y = (int) pawn.getLocation().getY();
         int computeX = stage.reverseComputeX(x);
