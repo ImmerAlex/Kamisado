@@ -217,10 +217,12 @@ public class UnitTestHoleStageModel {
     void testIsValidCoordinates(){
         HoleStageModel stageModel = new HoleStageModel("KamisadoTest", model);
         assertTrue(stageModel.isValidCoordinates(0, 0));
-        assertTrue(stageModel.isValidCoordinates(7, 7));
-        assertFalse(stageModel.isValidCoordinates(9, 9));
-        assertFalse(stageModel.isValidCoordinates(-1, -1));
-        assertFalse(stageModel.isValidCoordinates(0, 9));
+        assertTrue(stageModel.isValidCoordinates(8, 8));
+        assertFalse(stageModel.isValidCoordinates(-1, 0));
+        assertFalse(stageModel.isValidCoordinates(0, -1));
         assertFalse(stageModel.isValidCoordinates(9, 0));
+        assertFalse(stageModel.isValidCoordinates(0, 9));
+        assertFalse(stageModel.isValidCoordinates(-1, -1));
+        assertFalse(stageModel.isValidCoordinates(9, 9));
     }
 }
