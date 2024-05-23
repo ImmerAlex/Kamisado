@@ -68,25 +68,4 @@ public class HoleBoard extends ContainerElement {
     public boolean[][] getReachableCells() {
         return super.getReachableCells();
     }
-
-    public void displayReachableCells(boolean[][] reachableCells) {
-        System.out.println("[");
-        for (boolean[] cells : reachableCells) {
-            System.out.print("\t[");
-            for (boolean cell : cells) {
-                System.out.print(cell + ", ");
-            }
-            System.out.println("]");
-        }
-        System.out.println("]");
-    }
-
-    public HoleBoard copy() {
-        HoleBoard copy = new HoleBoard((int) x, (int) y, nbRows, nbCols, gameStageModel);
-        copy.reachableCells = new boolean[nbRows][nbCols];
-        for (int i = 0; i < nbRows; i++) {
-            System.arraycopy(reachableCells[i], 0, copy.reachableCells[i], 0, nbCols);
-        }
-        return copy;
-    }
 }

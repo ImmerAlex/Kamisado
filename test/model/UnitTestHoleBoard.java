@@ -116,15 +116,4 @@ public class UnitTestHoleBoard {
 
         assertTrue(noResult.isEmpty());
     }
-
-
-    @Test
-    void testCopy() {
-        HoleBoard copy = holeBoard.copy();
-        assertEquals(holeBoard.getNbCols(), copy.getNbCols());
-        assertEquals(holeBoard.getNbRows(), copy.getNbRows());
-        assertEquals(holeBoard.getX(), copy.getX());
-        assertEquals(holeBoard.getY(), copy.getY());
-        assertEquals(holeBoard.getName(), copy.getName());
-    }
 }
