@@ -4,6 +4,7 @@ import boardifier.control.Controller;
 import boardifier.control.Decider;
 import boardifier.model.Model;
 import boardifier.view.View;
+import model.EntryFileContainer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,9 +36,15 @@ public class AISelector {
         do {
             try {
                 System.out.print("Which type of AI you want : ");
-                choice = input.nextInt();
+                if (EntryFileContainer.getFirstEntry() != null) {
+                    choice = Integer.parseInt(EntryFileContainer.getFirstEntry());
+                    EntryFileContainer.removeFirstEntry();
+                    System.out.println(choice);
+                } else {
+                    choice = input.nextInt();
+                    input.nextLine();
+                }
             } catch (Exception ignore){}
-            input.nextLine();
         } while (choice < 0 || choice > 3);
 
         if (choice == 1) {
