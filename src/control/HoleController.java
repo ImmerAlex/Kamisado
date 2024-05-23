@@ -168,4 +168,8 @@ public class HoleController extends Controller {
 
         return true;
     }
+
+    public AISelector getAiSelector() {
+        return aiSelector;
+    }
 }
