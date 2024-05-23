@@ -100,8 +100,7 @@ public class HoleController extends Controller {
                         System.out.println("incorrect instruction. retry !");
                     }
 
-                } catch (IOException ignored) {
-                }
+                } catch (IOException ignored) {}
             }
         }
         stage.isWin();

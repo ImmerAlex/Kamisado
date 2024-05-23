@@ -1,59 +1,84 @@
 package model;
+import boardifier.control.ActionFactory;
+import boardifier.control.ActionPlayer;
+import boardifier.control.StageFactory;
+import boardifier.model.GameException;
 import boardifier.model.Model;
+import boardifier.model.TextElement;
+import boardifier.model.action.ActionList;
 import boardifier.view.ConsoleColor;
+import boardifier.view.View;
+import control.HoleController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import org.mockito.Mockito;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.util.List;
 
 
 public class UnitTestHoleStageModel {
-    private Model model;
-    private HoleStageModel holeStageModel;
-    private HoleStageFactory factory;
-    private HoleBoard holeBoard;
+    Model model;
+    HoleController holeController;
+    Thread gameThread;
 
     @BeforeEach
-    void init() {
+    public void setUp() {
         model = new Model();
-        holeStageModel = new HoleStageModel("HoleConsole", model);
-        model.setGameStage(holeStageModel);
-        factory = new HoleStageFactory(holeStageModel);
+        model.addHumanPlayer("Player X");
+        model.addHumanPlayer("Player O");
+
+        StageFactory.registerModelAndView("KamisadoTest",
+                "model.HoleStageModel",
+                "view.HoleStageView");
+        View holeView = new View(model);
+        holeController = new HoleController(model, holeView);
+        holeController.setFirstStageName("KamisadoTest");
+
+        String simulatedInput = "A8\nA6";
+        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
+
+        try{
+            gameThread = new Thread(() -> {
+                try {
+                    holeController.startGame();
+                    holeController.stageLoop();
+                } catch (GameException e) {
+                    System.out.println("Cannot start the game. Abort!");
+                }
+            });
+            gameThread.start();
+
+            Thread.sleep(1000);
+            gameThread.interrupt();
+        } catch (InterruptedException e) {
+            System.out.println("Test setup was interrupted");
+        }
+
     }
 
     @Test
-    void testIsValidCoordinates() {
-        HoleStageModel model = new HoleStageModel("HoleStageModel", new Model());
-        assertTrue(model.isValidCoordinates(0, 0));
-        assertTrue(model.isValidCoordinates(8, 8));
-        assertFalse(model.isValidCoordinates(-1, 0));
-        assertFalse(model.isValidCoordinates(0, -1));
-        assertFalse(model.isValidCoordinates(9, 0));
-        assertFalse(model.isValidCoordinates(0, 9));
-    }
+    void test(){
+        HoleStageModel stage = (HoleStageModel) model.getGameStage();
+        Pawn pawn = (Pawn) stage.getBoard().getElement(7, 0);
+        try {
+            ActionList actions = ActionFactory.generateMoveWithinContainer(model, pawn, 0, 0);
+            actions.setDoEndOfTurn(true);
 
-//    @Disabled
-//    @Test
-//    void testFindPawnFrom() {
-//        HoleStageModel mockHoleStageModel = Mockito.mock(HoleStageModel.class);
-//        HoleBoard mockHoleBoard = Mockito.mock(HoleBoard.class);
-//        Pawn pawn = new Pawn(0, 0, 'X', mockHoleStageModel);
-//        mockHoleStageModel.setBoard(mockHoleBoard);
-//        when(spyHoleStageModel.getLockedColor()).thenReturn(ConsoleColor.RED);
-//        when(spyHoleStageModel.isFirstPlayer()).thenReturn(true);
-//    }
+            ActionPlayer play = new ActionPlayer(model, holeController, actions);
 
-    @Test
-    void testGoodFromEntry(){
+            play.start();
+        } catch (Exception e) {
+            model.stopStage();
+            gameThread.interrupt();
+            System.out.println("fin");
+        }
+
 
 
     }
