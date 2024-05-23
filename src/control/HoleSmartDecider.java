@@ -64,16 +64,13 @@ public class HoleSmartDecider extends Decider {
                 }
 
                 setAllPossibleMove(board);
+                setLoosingMove(stage, board, from);
                 setWiningMove(stage, board);
-                setLoosingMove(stage, board);
 
                 Node node = tree.getBestCoup();
 
-                System.out.println("Node: " + node);
-
                 if (node.getPoint() == 0) {
                     to = getRandomCoup();
-                    System.out.println("To: " + to);
                 } else {
                     to = node.getCoup();
                 }
@@ -100,7 +97,7 @@ public class HoleSmartDecider extends Decider {
     public String getRandomCoup() {
         List<String> coups = tree.getAll0Point();
         if (coups.isEmpty()) {
-            return null; // or throw an exception, depending on your use case
+            return null;
         }
         int randomIndex = loto.nextInt(coups.size());
         return coups.get(randomIndex);
@@ -117,15 +114,21 @@ public class HoleSmartDecider extends Decider {
         }
     }
 
-    private void setLoosingMove(HoleStageModel stage, HoleBoard board) {
+    private void setLoosingMove(HoleStageModel stage, HoleBoard board, String from) {
         MinimalBoard[][] minimalBoardBase = createMinimalBoard(board);
         List<String> validMoveCurrentPlayer = getValidCurrentPlayerMove(board);
         String enemyName = stage.getCurrentPlayerName().contains("X") ? "Player O" : "Player X";
 
+        int rowFrom = from.charAt(0) - 'A';
+        int colFrom = from.charAt(1) - '1';
+
         for (String move : validMoveCurrentPlayer) {
-            MinimalBoard[][] minimalBoard = minimalBoardBase.clone();
+            MinimalBoard[][] minimalBoard = cloneMinimalBoard(minimalBoardBase);
             int row = move.charAt(0) - 'A';
             int col = move.charAt(1) - '1';
+
+            minimalBoard[col][row] = minimalBoardBase[colFrom][rowFrom];
+            minimalBoard[colFrom][rowFrom] = new MinimalBoard('N', -1);
 
             String boardColorLock = stage.getBoardColor(stage, view, row, col);
             int[] coordPawnEnemy = findPawnFrom(minimalBoardBase, boardColorLock, enemyName);
@@ -164,6 +167,18 @@ public class HoleSmartDecider extends Decider {
             for (int j = 0; j < board.getNbRows(); j++) {
                 Pawn pawn = (Pawn) board.getElement(i, j);
                 minimalBoard[i][j] = pawn != null ? new MinimalBoard(pawn.getSymbol(), pawn.getColor()) : new MinimalBoard('N', -1);
+            }
+        }
+
+        return minimalBoard;
+    }
+
+    private MinimalBoard[][] cloneMinimalBoard(MinimalBoard[][] minimalBoardBase) {
+        MinimalBoard[][] minimalBoard = new MinimalBoard[minimalBoardBase.length][minimalBoardBase[0].length];
+
+        for (int i = 0; i < minimalBoardBase.length; i++) {
+            for (int j = 0; j < minimalBoardBase[i].length; j++) {
+                minimalBoard[i][j] = new MinimalBoard(minimalBoardBase[i][j].getSymbol(), minimalBoardBase[i][j].getIdColor());
             }
         }
 
@@ -244,5 +259,29 @@ public class HoleSmartDecider extends Decider {
         }
 
         return false;
+    }
+
+    public void displayMinimalBoard(MinimalBoard[][] minimalBoard) {
+        System.out.println("[");
+        for (MinimalBoard[] boards : minimalBoard) {
+            System.out.print("\t[");
+            for (MinimalBoard board : boards) {
+                System.out.print(board + ", ");
+            }
+            System.out.println("]");
+        }
+        System.out.println("]");
+    }
+
+    public void displayReachableCells(boolean[][] reachableCells) {
+        System.out.println("[");
+        for (boolean[] cells : reachableCells) {
+            System.out.print("\t[");
+            for (boolean cell : cells) {
+                System.out.print(cell + ", ");
+            }
+            System.out.println("]");
+        }
+        System.out.println("]");
     }
 }

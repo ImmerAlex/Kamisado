@@ -72,4 +72,24 @@ public class Tree {
         System.out.println(node.getCoup() + " : " + node.getPoint());
         displayRecursive(node.getRight());
     }
+
+    public List<Node> getAll10Point() {
+        return getAll10PointRecursive(root);
+    }
+
+    private List<Node> getAll10PointRecursive(Node node) {
+        List<Node> tenPointMoves = new ArrayList<>();
+
+        if (node == null) {
+            return tenPointMoves;
+        }
+        if (node.getPoint() == 10) {
+            tenPointMoves.add(node);
+        }
+
+        tenPointMoves.addAll(getAll10PointRecursive(node.getLeft()));
+        tenPointMoves.addAll(getAll10PointRecursive(node.getRight()));
+        return tenPointMoves;
+    }
+
 }
