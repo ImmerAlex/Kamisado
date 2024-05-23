@@ -7,8 +7,10 @@ import boardifier.view.View;
 import control.HoleController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
 import java.io.ByteArrayInputStream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 public class UnitTestHoleStageModel {
@@ -30,48 +32,68 @@ public class UnitTestHoleStageModel {
     }
 
     @Test
-    void testIsWinPlayerX(){
+    void testIsWinPlayerX() {
         model.addHumanPlayer("Player X");
         model.addHumanPlayer("Player O");
-        String simulatedInput =
-                "D8\n" +
-                "D3\n" +
-                "E2\n" +
-                "G7\n" +
-                "A7\n" +
-                "F1";
-        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
+
+        EntryFileContainer.addEntry("D8");
+        EntryFileContainer.addEntry("D3");
+        EntryFileContainer.addEntry("E2");
+        EntryFileContainer.addEntry("G7");
+        EntryFileContainer.addEntry("A7");
+        EntryFileContainer.addEntry("F1");
 
         try {
-            gameThread = new Thread(() -> {
-                try {
-                    holeController.startGame();
-                    holeController.stageLoop();
-
-                } catch (GameException e) {
-                    System.out.println("Cannot start the game. Abort!");
-                }
-            });
-            gameThread.start();
-
-            gameThread.join();
-
-            int winnerId = model.getIdWinner();
-
-            String winnerName = model.getPlayers().get(winnerId).getName();
-
-            assertEquals("Player X", winnerName);
-
-            Thread.sleep(100);
-        } catch (Exception e) {
-            model.stopStage();
-            gameThread.interrupt();
-            System.out.println("fin");
-            }
+            holeController.startGame();
+            holeController.stageLoop();
+        } catch (GameException e) {
+            System.out.println("Cannot start the game. Abort!");
         }
 
+        int winnerId = model.getIdWinner();
+        String winnerName = model.getPlayers().get(winnerId).getName();
+        assertEquals("Player X", winnerName);
+
+
+//        String simulatedInput =
+//                "D8\n" +
+//                        "D3\n" +
+//                        "E2\n" +
+//                        "G7\n" +
+//                        "A7\n" +
+//                        "F1";
+//        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
+//
+//        try {
+//            gameThread = new Thread(() -> {
+//                try {
+//                    holeController.startGame();
+//                    holeController.stageLoop();
+//
+//                } catch (GameException e) {
+//                    System.out.println("Cannot start the game. Abort!");
+//                }
+//            });
+//            gameThread.start();
+//
+//            gameThread.join();
+//
+//            int winnerId = model.getIdWinner();
+//
+//            String winnerName = model.getPlayers().get(winnerId).getName();
+//
+//            assertEquals("Player X", winnerName);
+//
+//            Thread.sleep(100);
+//        } catch (Exception e) {
+//            model.stopStage();
+//            gameThread.interrupt();
+//            System.out.println("fin");
+//        }
+    }
+
     @Test
-    void testIsWinPlayerO(){
+    void testIsWinPlayerO() {
         model.addHumanPlayer("Player X");
         model.addHumanPlayer("Player O");
         String simulatedInput =
@@ -111,7 +133,7 @@ public class UnitTestHoleStageModel {
     }
 
     @Test
-    void testIsWinComputerX(){
+    void testIsWinComputerX() {
         model.addHumanPlayer("Computer X");
         model.addHumanPlayer("Computer O");
         String simulatedInput =
@@ -152,7 +174,7 @@ public class UnitTestHoleStageModel {
     }
 
     @Test
-    void testIsWinComputerO(){
+    void testIsWinComputerO() {
         model.addHumanPlayer("Computer X");
         model.addHumanPlayer("Computer O");
         String simulatedInput =
