@@ -1,25 +1,14 @@
 package model;
-import boardifier.control.ActionFactory;
-import boardifier.control.ActionPlayer;
+
 import boardifier.control.StageFactory;
 import boardifier.model.GameException;
 import boardifier.model.Model;
-import boardifier.model.TextElement;
-import boardifier.model.action.ActionList;
-import boardifier.view.ConsoleColor;
 import boardifier.view.View;
 import control.HoleController;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.util.List;
 
 
 public class UnitTestHoleStageModel {
@@ -30,8 +19,6 @@ public class UnitTestHoleStageModel {
     @BeforeEach
     public void setUp() {
         model = new Model();
-        model.addHumanPlayer("Player X");
-        model.addHumanPlayer("Player O");
 
         StageFactory.registerModelAndView("KamisadoTest",
                 "model.HoleStageModel",
@@ -40,46 +27,167 @@ public class UnitTestHoleStageModel {
         holeController = new HoleController(model, holeView);
         holeController.setFirstStageName("KamisadoTest");
 
-        String simulatedInput = "A8\nA6";
+    }
+
+    @Test
+    void testIsWinPlayerX(){
+        model.addHumanPlayer("Player X");
+        model.addHumanPlayer("Player O");
+        String simulatedInput =
+                "D8\n" +
+                "D3\n" +
+                "E2\n" +
+                "G7\n" +
+                "A7\n" +
+                "F1";
         System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
 
-        try{
+        try {
             gameThread = new Thread(() -> {
                 try {
                     holeController.startGame();
                     holeController.stageLoop();
+
                 } catch (GameException e) {
                     System.out.println("Cannot start the game. Abort!");
                 }
             });
             gameThread.start();
 
-            Thread.sleep(1000);
+            gameThread.join();
+
+            int winnerId = model.getIdWinner();
+
+            String winnerName = model.getPlayers().get(winnerId).getName();
+
+            assertEquals("Player X", winnerName);
+
+            Thread.sleep(100);
+        } catch (Exception e) {
+            model.stopStage();
             gameThread.interrupt();
-        } catch (InterruptedException e) {
-            System.out.println("Test setup was interrupted");
+            System.out.println("fin");
+            }
         }
 
-    }
-
     @Test
-    void test(){
-        HoleStageModel stage = (HoleStageModel) model.getGameStage();
-        Pawn pawn = (Pawn) stage.getBoard().getElement(7, 0);
+    void testIsWinPlayerO(){
+        model.addHumanPlayer("Player X");
+        model.addHumanPlayer("Player O");
+        String simulatedInput =
+                "G8\n" +
+                        "D5\n" +
+                        "H7\n" +
+                        "C5\n" +
+                        "G8\n";
+        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
+
         try {
-            ActionList actions = ActionFactory.generateMoveWithinContainer(model, pawn, 0, 0);
-            actions.setDoEndOfTurn(true);
+            gameThread = new Thread(() -> {
+                try {
+                    holeController.startGame();
+                    holeController.stageLoop();
 
-            ActionPlayer play = new ActionPlayer(model, holeController, actions);
+                } catch (GameException e) {
+                    System.out.println("Cannot start the game. Abort!");
+                }
+            });
+            gameThread.start();
 
-            play.start();
+            gameThread.join();
+
+            int winnerId = model.getIdWinner();
+
+            String winnerName = model.getPlayers().get(winnerId).getName();
+
+            assertEquals("Player O", winnerName);
+
+            Thread.sleep(100);
         } catch (Exception e) {
             model.stopStage();
             gameThread.interrupt();
             System.out.println("fin");
         }
+    }
 
+    @Test
+    void testIsWinComputerX(){
+        model.addHumanPlayer("Computer X");
+        model.addHumanPlayer("Computer O");
+        String simulatedInput =
+                "D8\n" +
+                        "D3\n" +
+                        "E2\n" +
+                        "G7\n" +
+                        "A7\n" +
+                        "F1";
+        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
 
+        try {
+            gameThread = new Thread(() -> {
+                try {
+                    holeController.startGame();
+                    holeController.stageLoop();
 
+                } catch (GameException e) {
+                    System.out.println("Cannot start the game. Abort!");
+                }
+            });
+            gameThread.start();
+
+            gameThread.join();
+
+            int winnerId = model.getIdWinner();
+
+            String winnerName = model.getPlayers().get(winnerId).getName();
+
+            assertEquals("Computer X", winnerName);
+
+            Thread.sleep(100);
+        } catch (Exception e) {
+            model.stopStage();
+            gameThread.interrupt();
+            System.out.println("fin");
+        }
+    }
+
+    @Test
+    void testIsWinComputerO(){
+        model.addHumanPlayer("Computer X");
+        model.addHumanPlayer("Computer O");
+        String simulatedInput =
+                "G8\n" +
+                        "D5\n" +
+                        "H7\n" +
+                        "C5\n" +
+                        "G8\n";
+        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
+
+        try {
+            gameThread = new Thread(() -> {
+                try {
+                    holeController.startGame();
+                    holeController.stageLoop();
+
+                } catch (GameException e) {
+                    System.out.println("Cannot start the game. Abort!");
+                }
+            });
+            gameThread.start();
+
+            gameThread.join();
+
+            int winnerId = model.getIdWinner();
+
+            String winnerName = model.getPlayers().get(winnerId).getName();
+
+            assertEquals("Computer O", winnerName);
+
+            Thread.sleep(100);
+        } catch (Exception e) {
+            model.stopStage();
+            gameThread.interrupt();
+            System.out.println("fin");
+        }
     }
 }
