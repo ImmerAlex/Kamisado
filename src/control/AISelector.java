@@ -67,11 +67,4 @@ public class AISelector {
 
         return null;
     }
-
-    public static void displayAiMap() {
-        System.out.println("AI Map :");
-        for (Map.Entry<Integer, AIType> entry : aiMap.entrySet()) {
-            System.out.println("Player " + entry.getKey() + " : " + entry.getValue());
-        }
-    }
 }

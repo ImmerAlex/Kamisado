@@ -5,28 +5,37 @@ import boardifier.control.StageFactory;
 import boardifier.model.Model;
 import boardifier.view.View;
 import model.EntryFileContainer;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class UnitTestAISelector {
+    Model model;
+    View holeView;
+    HoleController holeController;
+    AISelector aiSelector;
 
-    @Test
-    void testGetDecider() {
-        Model model = new Model();
+    @BeforeEach
+    public void setup() {
+        model = new Model();
         model.addComputerPlayer("Computer X");
         model.addComputerPlayer("Computer O");
-        EntryFileContainer.addEntry("2");
-        EntryFileContainer.addEntry("2");
 
         StageFactory.registerModelAndView("KamisadoTest", "model.HoleStageModel","view.HoleStageView");
 
-        View holeView = new View(model);
+        holeView = new View(model);
+    }
 
-        HoleController holeController = new HoleController(model, holeView);
+    @Test
+    void testGetDeciderSmart() {
+        EntryFileContainer.addEntry("2");
+        EntryFileContainer.addEntry("2");
+
+        holeController = new HoleController(model, holeView);
         holeController.setFirstStageName("KamisadoTest");
 
-        AISelector aiSelector = holeController.getAiSelector();
+        aiSelector = holeController.getAiSelector();
 
         try {
             holeController.startGame();
@@ -37,5 +46,47 @@ public class UnitTestAISelector {
 
         Decider decider = aiSelector.getDecider(0, holeController);
         assertNotNull(decider);
+    }
+
+    @Test
+    void testGetDeciderNaive() {
+        EntryFileContainer.addEntry("1");
+        EntryFileContainer.addEntry("2");
+
+        holeController = new HoleController(model, holeView);
+        holeController.setFirstStageName("KamisadoTest");
+
+        aiSelector = holeController.getAiSelector();
+
+        try {
+            holeController.startGame();
+            holeController.stageLoop();
+        } catch (Exception e) {
+            System.out.println("Cannot start the game. Abort!");
+        }
+
+        Decider decider = aiSelector.getDecider(1, holeController);
+        assertNotNull(decider);
+    }
+
+    @Test
+    void testGetDeciderInvalid() {
+        EntryFileContainer.addEntry("2");
+        EntryFileContainer.addEntry("2");
+
+        holeController = new HoleController(model, holeView);
+        holeController.setFirstStageName("KamisadoTest");
+
+        aiSelector = holeController.getAiSelector();
+
+        try {
+            holeController.startGame();
+            holeController.stageLoop();
+        } catch (Exception e) {
+            System.out.println("Cannot start the game. Abort!");
+        }
+
+        Decider decider = aiSelector.getDecider(2, holeController);
+        assertNull(decider);
     }
 }
