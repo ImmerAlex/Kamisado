@@ -34,7 +34,8 @@ public class UnitTestHoleBoard {
         factory.setup();
 
         holeBoard = stageModel.getBoard();
-        System.out.println(holeBoard);
+
+
         mockGameStage = mock(HoleStageModel.class);
 
         when(mockGameStage.getBoard()).thenReturn(holeBoard);

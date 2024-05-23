@@ -123,7 +123,6 @@ public class HoleStageModel extends GameStageModel {
     public boolean goodFromEntry(int row, int col) {
         String currentPlayer = getCurrentPlayerName();
         GameElement element = getBoard().getElement(col, row);
-        System.out.println(getBoard());
         if (element instanceof Pawn pawn) {
             if (pawn.getSymbol() == 'X' && (currentPlayer.equals("Player X") || currentPlayer.equals("Computer X"))) {
                 return true;

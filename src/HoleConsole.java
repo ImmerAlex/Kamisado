@@ -55,6 +55,7 @@ public class HoleConsole {
         HoleController control = new HoleController(model,holeView);
         control.setFirstStageName("Kamisado");
 
+
         try {
             control.startGame();
             control.stageLoop();
