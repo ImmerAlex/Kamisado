@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class UnitTestHoleStageModel {
@@ -211,5 +211,16 @@ public class UnitTestHoleStageModel {
             gameThread.interrupt();
             System.out.println("fin");
         }
+    }
+
+    @Test
+    void testIsValidCoordinates(){
+        HoleStageModel stageModel = new HoleStageModel("KamisadoTest", model);
+        assertTrue(stageModel.isValidCoordinates(0, 0));
+        assertTrue(stageModel.isValidCoordinates(7, 7));
+        assertFalse(stageModel.isValidCoordinates(9, 9));
+        assertFalse(stageModel.isValidCoordinates(-1, -1));
+        assertFalse(stageModel.isValidCoordinates(0, 9));
+        assertFalse(stageModel.isValidCoordinates(9, 0));
     }
 }
