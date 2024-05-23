@@ -14,11 +14,11 @@ public class HoleConsole {
     public static final Scanner input = new Scanner(System.in);
 
     public static void main(String[] args) {
-//        Logger.setLevel(Logger.LOGGER_TRACE);
-//        Logger.setVerbosity(Logger.VERBOSE_HIGH);
         EntryFileContainer entryFileContainer = new EntryFileContainer();
 
-        while(input.hasNextLine()) {
+        //TODO: It look like input.hasNext() wait an entry
+
+        while(input.hasNext()) {
             entryFileContainer.addEntry(input.nextLine());
         }
 
