@@ -126,9 +126,7 @@ public class HoleStageModel extends GameStageModel {
         if (element instanceof Pawn pawn) {
             if (pawn.getSymbol() == 'X' && (currentPlayer.equals("Player X") || currentPlayer.equals("Computer X"))) {
                 return true;
-            } else if (pawn.getSymbol() == 'O' && (currentPlayer.equals("Player O") || currentPlayer.equals("Computer O"))) {
-                return true;
-            }
+            } else return pawn.getSymbol() == 'O' && (currentPlayer.equals("Player O") || currentPlayer.equals("Computer O"));
         }
         return false;
     }
@@ -202,21 +200,6 @@ public class HoleStageModel extends GameStageModel {
                 model.stopStage();
             }
         }
-    }
-
-    public HoleStageModel copy() {
-        HoleStageModel copy = new HoleStageModel(getName(), model);
-        copy.setBoard(board.copy());
-        copy.setXPawns(new ArrayList<>(xPawns));
-        copy.setOPawns(new ArrayList<>(oPawns));
-        copy.setPlayerName(playerName.copy());
-        copy.setFirstPlayer(firstPlayer);
-        copy.setLockedColor(lockedColor);
-        return copy;
-    }
-
-    private void setLockedColor(String lockedColor) {
-        this.lockedColor = lockedColor;
     }
 
     public String getLockedColor() {

@@ -33,7 +33,7 @@ public class SpriteElement extends GameElement {
        sequence of any size.
      */
     protected List<Integer> faceIndexes;
-    // the index to select an entry in faceIndexes.
+    // the index to select an list_test in faceIndexes.
     // It is not used directly but to determine the index of the current face, i.e. faceIndexes.get(currentIndex)
     protected int currentIndex;
 

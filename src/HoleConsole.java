@@ -1,25 +1,21 @@
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Scanner;
-
+import boardifier.control.StageFactory;
 import boardifier.model.GameException;
+import boardifier.model.Model;
 import boardifier.view.View;
 import control.HoleController;
-
-import boardifier.control.StageFactory;
-import boardifier.model.Model;
 import model.EntryFileContainer;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 public class HoleConsole {
-    public static final Scanner input = new Scanner(System.in);
+    public static final BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
 
-    public static void main(String[] args) {
-        EntryFileContainer entryFileContainer = new EntryFileContainer();
-
-        //TODO: It look like input.hasNext() wait an entry
-
-        while(input.hasNext()) {
-            entryFileContainer.addEntry(input.nextLine());
+    public static void main(String[] args) throws IOException {
+        while (input.ready()) {
+            String nextLine = input.readLine();
+            EntryFileContainer.addEntry(nextLine);
         }
 
         System.out.println("Choose the game mode:");
@@ -27,17 +23,17 @@ public class HoleConsole {
         System.out.println("\t1: Human vs Computer");
         System.out.println("\t2: Computer vs Computer");
 
-        int mode = -1;
+        int mode;
         String choice;
         label:
         do {
             System.out.print("Your choice: ");
-            if (!entryFileContainer.getFirstEntry().isEmpty()) {
-                choice = entryFileContainer.getFirstEntry();
-                entryFileContainer.removeFirstEntry();
+            if (EntryFileContainer.getFirstEntry() != null) {
+                choice = EntryFileContainer.getFirstEntry();
+                EntryFileContainer.removeFirstEntry();
                 System.out.println(choice);
             } else {
-                choice = input.nextLine();
+                choice = input.readLine();
             }
 
             switch (choice) {
@@ -70,15 +66,14 @@ public class HoleConsole {
 
         StageFactory.registerModelAndView("Kamisado", "model.HoleStageModel", "view.HoleStageView");
         View holeView = new View(model);
-        HoleController control = new HoleController(model,holeView);
+        HoleController control = new HoleController(model, holeView);
         control.setFirstStageName("Kamisado");
 
 
         try {
             control.startGame();
             control.stageLoop();
-        }
-        catch(GameException e) {
+        } catch (GameException e) {
             System.out.println("Cannot start the game. Abort");
         }
     }

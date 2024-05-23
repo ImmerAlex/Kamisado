@@ -22,8 +22,6 @@ import java.util.Random;
 public class HoleSmartDecider extends Decider {
 
     private static final Random loto = new Random(Calendar.getInstance().getTimeInMillis());
-    private View view;
-    private Tree tree;
     private static final List<String> winingMoveX = new ArrayList<>();
     private static final List<String> winingMoveO = new ArrayList<>();
 
@@ -33,6 +31,9 @@ public class HoleSmartDecider extends Decider {
             winingMoveO.add((char) (i + 'A') + "8");
         }
     }
+
+    private final View view;
+    private final Tree tree;
 
     public HoleSmartDecider(Model model, Controller control, View view) {
         super(model, control);
@@ -88,7 +89,8 @@ public class HoleSmartDecider extends Decider {
                 stage.isWin();
 
                 return actions;
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }
 
         return null;
