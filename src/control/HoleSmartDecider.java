@@ -11,6 +11,7 @@ import model.HoleBoard;
 import model.HoleStageModel;
 import model.MinimalBoard;
 import model.Pawn;
+import model.binary_tree.Node;
 import model.binary_tree.Tree;
 
 import java.util.ArrayList;
@@ -66,7 +67,17 @@ public class HoleSmartDecider extends Decider {
                 setWiningMove(stage, board);
                 setLoosingMove(stage, board);
 
-                to = tree.getBestCoup();
+                Node node = tree.getBestCoup();
+
+                System.out.println("Node: " + node);
+
+                if (node.getPoint() == 0) {
+                    to = getRandomCoup();
+                    System.out.println("To: " + to);
+                } else {
+                    to = node.getCoup();
+                }
+
                 int rowTo = to.charAt(0) - 'A';
                 int colTo = to.charAt(1) - '1';
 
@@ -84,6 +95,15 @@ public class HoleSmartDecider extends Decider {
         }
 
         return null;
+    }
+
+    public String getRandomCoup() {
+        List<String> coups = tree.getAll0Point();
+        if (coups.isEmpty()) {
+            return null; // or throw an exception, depending on your use case
+        }
+        int randomIndex = loto.nextInt(coups.size());
+        return coups.get(randomIndex);
     }
 
     private void setWiningMove(HoleStageModel stage, HoleBoard board) {

@@ -47,4 +47,8 @@ public class Node {
             }
         }
     }
+
+    public String toString() {
+        return "Coup: " + coup + ", Point: " + point;
+    }
 }

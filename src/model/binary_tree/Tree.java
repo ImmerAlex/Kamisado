@@ -1,5 +1,8 @@
 package model.binary_tree;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Tree {
     private Node root;
 
@@ -15,23 +18,49 @@ public class Tree {
         }
     }
 
-    public String getBestCoup() {
-        return getBestCoupRecursive(root, root.getCoup(), root.getPoint());
+    public List<String> getAll0Point() {
+        List<String> zeroPointMoves = new ArrayList<>();
+        getAll0PointRecursive(root, zeroPointMoves);
+        return zeroPointMoves;
     }
 
-    private String getBestCoupRecursive(Node node, String bestCoup, int bestPoint) {
+    private void getAll0PointRecursive(Node node, List<String> zeroPointMoves) {
         if (node == null) {
-            return bestCoup;
+            return;
         }
-        if (node.getPoint() > bestPoint) {
-            bestCoup = node.getCoup();
-            bestPoint = node.getPoint();
+        if (node.getPoint() == 0) {
+            zeroPointMoves.add(node.getCoup());
         }
-        bestCoup = getBestCoupRecursive(node.getLeft(), bestCoup, bestPoint);
-        return getBestCoupRecursive(node.getRight(), bestCoup, bestPoint);
+        getAll0PointRecursive(node.getLeft(), zeroPointMoves);
+        getAll0PointRecursive(node.getRight(), zeroPointMoves);
     }
 
-    public void display () {
+    public Node getBestCoup() {
+        return getBestCoupRecursive(root);
+    }
+
+    private Node getBestCoupRecursive(Node node) {
+        if (node == null) {
+            return null;
+        }
+
+        Node leftBest = getBestCoupRecursive(node.getLeft());
+        Node rightBest = getBestCoupRecursive(node.getRight());
+
+        Node best = node;
+
+        if (leftBest != null && leftBest.getPoint() > best.getPoint()) {
+            best = leftBest;
+        }
+
+        if (rightBest != null && rightBest.getPoint() > best.getPoint()) {
+            best = rightBest;
+        }
+
+        return best;
+    }
+
+    public void display() {
         displayRecursive(root);
     }
 
