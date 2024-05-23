@@ -151,21 +151,6 @@ public class HoleNaiveDecider extends Decider {
         return lst;
     }
 
-    public List<String> getValidCurrentPlayerMove(HoleBoard board) {
-        List<String> lst = new ArrayList<>();
-        boolean[][] reachableCells = board.getReachableCells();
-
-        for (int i = 0; i < board.getNbCols(); i++) {
-            for (int j = 0; j < board.getNbRows(); j++) {
-                if (reachableCells[i][j]) {
-                    lst.add("" + (char) (j + 'A') + (i + 1));
-                }
-            }
-        }
-
-        return lst;
-    }
-
     public boolean noOneCanMove(HoleStageModel stage, HoleBoard board) {
         for (Pawn pawn : stage.getXPawns()) {
             if (canPawnMove(stage, board, pawn, "Player X")) return false;

@@ -262,28 +262,4 @@ public class HoleSmartDecider extends Decider {
 
         return false;
     }
-
-    public void displayMinimalBoard(MinimalBoard[][] minimalBoard) {
-        System.out.println("[");
-        for (MinimalBoard[] boards : minimalBoard) {
-            System.out.print("\t[");
-            for (MinimalBoard board : boards) {
-                System.out.print(board + ", ");
-            }
-            System.out.println("]");
-        }
-        System.out.println("]");
-    }
-
-    public void displayReachableCells(boolean[][] reachableCells) {
-        System.out.println("[");
-        for (boolean[] cells : reachableCells) {
-            System.out.print("\t[");
-            for (boolean cell : cells) {
-                System.out.print(cell + ", ");
-            }
-            System.out.println("]");
-        }
-        System.out.println("]");
-    }
 }
