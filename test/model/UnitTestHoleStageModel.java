@@ -20,13 +20,12 @@ public class UnitTestHoleStageModel {
     public void setUp() {
         model = new Model();
 
-        StageFactory.registerModelAndView("KamisadoTest",
-                "model.HoleStageModel",
-                "view.HoleStageView");
+        StageFactory.registerModelAndView("KamisadoTest", "model.HoleStageModel","view.HoleStageView");
+
         View holeView = new View(model);
+
         holeController = new HoleController(model, holeView);
         holeController.setFirstStageName("KamisadoTest");
-
     }
 
     @Test
