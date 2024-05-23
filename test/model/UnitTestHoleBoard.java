@@ -13,27 +13,29 @@ import java.awt.*;
 import java.util.List;
 
 public class UnitTestHoleBoard {
-    private HoleBoard holeBoard;
-    private HoleStageModel mockGameStage;
-    private GameStageModel mockGameStageModel;
     private Model model;
     private HoleStageModel stageModel;
     private HoleStageFactory factory;
+    private HoleBoard holeBoard;
+    private HoleStageModel mockGameStage;
 
     @BeforeEach
-    public void setup() {
+    public void init() {
         model = new Model();
         stageModel = new HoleStageModel("HoleConsole", model);
         factory = new HoleStageFactory(stageModel);
 
         model.addHumanPlayer("Player X");
-        model.addComputerPlayer("Player O");
+        model.addHumanPlayer("Player O");
+
+        model.addComputerPlayer("Computer X");
+        model.addComputerPlayer("Computer O");
 
         factory.setup();
 
         holeBoard = stageModel.getBoard();
+        System.out.println(holeBoard);
         mockGameStage = mock(HoleStageModel.class);
-        mockGameStageModel = mock(GameStageModel.class);
 
         when(mockGameStage.getBoard()).thenReturn(holeBoard);
     }
