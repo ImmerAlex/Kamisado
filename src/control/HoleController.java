@@ -8,6 +8,7 @@ import boardifier.model.Model;
 import boardifier.model.Player;
 import boardifier.model.action.ActionList;
 import boardifier.view.View;
+import model.EntryFileContainer;
 import model.HoleStageModel;
 import model.Pawn;
 
@@ -60,7 +61,14 @@ public class HoleController extends Controller {
 
                     if (stage.isFirstPlayer()) {
                         System.out.print(p.getName() + " from > ");
-                        lineFrom = consoleIn.readLine();
+
+                        if (EntryFileContainer.getFirstEntry() != null) {
+                            lineFrom = EntryFileContainer.getFirstEntry();
+                            EntryFileContainer.removeFirstEntry();
+                            System.out.println(lineFrom);
+                        } else {
+                            lineFrom = consoleIn.readLine();
+                        }
 
                         if (!stage.goodFromEntry(lineFrom)) {
                             System.out.println("Incorrect entry. Retry !");
@@ -74,7 +82,14 @@ public class HoleController extends Controller {
                         }
 
                         System.out.print(p.getName() + " to > ");
-                        lineTo = consoleIn.readLine();
+
+                        if (EntryFileContainer.getFirstEntry() != null) {
+                            lineTo = EntryFileContainer.getFirstEntry();
+                            EntryFileContainer.removeFirstEntry();
+                            System.out.println(lineTo);
+                        } else {
+                            lineTo = consoleIn.readLine();
+                        }
 
                         ok = analyseAndPlay(lineFrom, lineTo);
 
@@ -91,7 +106,14 @@ public class HoleController extends Controller {
                         }
 
                         System.out.print(p.getName() + " move " + lineFrom + " to > ");
-                        lineTo = consoleIn.readLine();
+                        if (EntryFileContainer.getFirstEntry() != null) {
+                            lineTo = EntryFileContainer.getFirstEntry();
+                            EntryFileContainer.removeFirstEntry();
+                            System.out.println(lineTo);
+                        } else {
+                            lineTo = consoleIn.readLine();
+                        }
+
 
                         ok = analyseAndPlay(lineFrom, lineTo);
                     }
