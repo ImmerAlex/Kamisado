@@ -1,14 +1,10 @@
 package model;
-import boardifier.model.GameStageModel;
 import boardifier.model.Model;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-
 import java.awt.*;
 import java.util.List;
 
@@ -20,7 +16,7 @@ public class UnitTestHoleBoard {
     private HoleStageModel mockGameStage;
 
     @BeforeEach
-    public void init() {
+    public void setUp() {
         model = new Model();
         stageModel = new HoleStageModel("HoleConsole", model);
         factory = new HoleStageFactory(stageModel);

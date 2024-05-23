@@ -15,7 +15,7 @@ class UnitTestHoleStageFactory {
     private TextElement text;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         model = new Model();
         stageModel = new HoleStageModel("HoleConsole", model);
         factory = new HoleStageFactory(stageModel);
