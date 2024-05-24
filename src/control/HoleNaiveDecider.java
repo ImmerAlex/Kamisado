@@ -64,7 +64,7 @@ public class HoleNaiveDecider extends Decider {
                     continue;
                 }
 
-                setAllPossibleMove(board, rowFrom, colFrom);
+                setAllPossibleMove(board, rowFrom);
 
                 List<Node> nodes = tree.getAll10Point();
 
@@ -116,7 +116,7 @@ public class HoleNaiveDecider extends Decider {
         return minimalBoard;
     }
 
-    private void setAllPossibleMove(HoleBoard board, int rowFrom, int colFrom) {
+    private void setAllPossibleMove(HoleBoard board, int rowFrom) {
         boolean[][] reachableCells = board.getReachableCells();
 
         for (int i = 0; i < board.getNbCols(); i++) {
