@@ -49,7 +49,6 @@ public class AISelector {
 
 
         if (choice == 1) {
-            System.out.println("AI naive selected");
             aiMap.put(idPlayer, AIType.NAIVE);
         } else {
             aiMap.put(idPlayer, AIType.SMART);

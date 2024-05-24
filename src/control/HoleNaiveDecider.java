@@ -57,7 +57,7 @@ public class HoleNaiveDecider extends Decider {
                     if (noOneCanMove(stage, board)) {
                         System.out.println("No one can move.");
                         model.stopStage();
-                        break;
+                        return null;
                     }
                     System.out.println(model.getGameStage().getCurrentPlayerName() + " cannot move. Pass turn.");
                     ok = true;
@@ -68,7 +68,9 @@ public class HoleNaiveDecider extends Decider {
 
                 List<Node> nodes = tree.getAll10Point();
 
-                if (nodes == null || nodes.size() == 0) {
+                System.out.println("Nodes size: " + nodes.size() + ", nodes: " + nodes);
+
+                if (nodes.size() == 0) {
                     to = getRandomCoup();
                 } else {
                     int index = loto.nextInt(nodes.size());
@@ -96,9 +98,6 @@ public class HoleNaiveDecider extends Decider {
 
     public String getRandomCoup() {
         List<String> coups = tree.getAll0Point();
-        if (coups.isEmpty()) {
-            return null;
-        }
         int randomIndex = loto.nextInt(coups.size());
         return coups.get(randomIndex);
     }
@@ -164,7 +163,7 @@ public class HoleNaiveDecider extends Decider {
         return true;
     }
 
-    private boolean canPawnMove(HoleStageModel stage, HoleBoard board, Pawn pawn, String playerName) {
+    public boolean canPawnMove(HoleStageModel stage, HoleBoard board, Pawn pawn, String playerName) {
         int x = (int) pawn.getLocation().getX();
         int y = (int) pawn.getLocation().getY();
         int computeX = stage.reverseComputeX(x);
