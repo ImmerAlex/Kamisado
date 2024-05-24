@@ -1,10 +1,8 @@
 package control;
 
-import boardifier.control.StageFactory;
 import boardifier.model.Model;
 import boardifier.view.ConsoleColor;
 import boardifier.view.View;
-import model.EntryFileContainer;
 import model.HoleBoard;
 import model.HoleStageModel;
 import model.Pawn;
@@ -13,13 +11,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class UnitTestHoleSmartDecider {
     Model model;
@@ -58,10 +53,6 @@ public class UnitTestHoleSmartDecider {
             }
         };
 
-//        when(mockedStage.reverseComputeX(Mockito.anyInt())).thenReturn(0);
-//        when(mockedStage.reverseComputeY(Mockito.anyInt())).thenReturn(0);
-//        when(mockedStage.getLockedColor()).thenReturn(ConsoleColor.BROWN_BACKGROUND);
-
         assertFalse(stage.canPawnMove(stage, board, pawn, "Player X"));
 
         stage = new HoleStageModel("test", model) {
@@ -81,12 +72,7 @@ public class UnitTestHoleSmartDecider {
             }
         };
 
-//        when(mockedStage.reverseComputeX(Mockito.anyInt())).thenReturn(0);
-//        when(mockedStage.reverseComputeY(Mockito.anyInt())).thenReturn(4);
-
         board.addElement(pawn, 5, 0);
-
-//        when(mockedStage.getLockedColor()).thenReturn(ConsoleColor.BROWN_BACKGROUND);
         assertTrue(stage.canPawnMove(stage, board, pawn, "Player X"));
 
         stage = new HoleStageModel("test", model) {
@@ -106,7 +92,6 @@ public class UnitTestHoleSmartDecider {
             }
         };
 
-        when(mockedStage.getLockedColor()).thenReturn(ConsoleColor.BLUE_BACKGROUND);
         assertFalse(stage.canPawnMove(stage, board, pawn, "Player X"));
     }
 

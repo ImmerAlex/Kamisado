@@ -60,19 +60,6 @@ public class Tree {
         return best;
     }
 
-    public void display() {
-        displayRecursive(root);
-    }
-
-    private void displayRecursive(Node node) {
-        if (node == null) {
-            return;
-        }
-        displayRecursive(node.getLeft());
-        System.out.println(node.getCoup() + " : " + node.getPoint());
-        displayRecursive(node.getRight());
-    }
-
     public List<Node> getAll10Point() {
         return getAll10PointRecursive(root);
     }

@@ -12,13 +12,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 public class UnitTestHoleNaiveDecider {
@@ -59,10 +57,6 @@ public class UnitTestHoleNaiveDecider {
             }
         };
 
-//        when(mockedStage.reverseComputeX(Mockito.anyInt())).thenReturn(0);
-//        when(mockedStage.reverseComputeY(Mockito.anyInt())).thenReturn(0);
-//        when(mockedStage.getLockedColor()).thenReturn(ConsoleColor.BROWN_BACKGROUND);
-
         assertFalse(stage.canPawnMove(stage, board, pawn, "Player X"));
 
         stage = new HoleStageModel("test", model) {
@@ -82,12 +76,8 @@ public class UnitTestHoleNaiveDecider {
             }
         };
 
-//        when(mockedStage.reverseComputeX(Mockito.anyInt())).thenReturn(0);
-//        when(mockedStage.reverseComputeY(Mockito.anyInt())).thenReturn(4);
-
         board.addElement(pawn, 5, 0);
 
-//        when(mockedStage.getLockedColor()).thenReturn(ConsoleColor.BROWN_BACKGROUND);
         assertTrue(stage.canPawnMove(stage, board, pawn, "Player X"));
 
         stage = new HoleStageModel("test", model) {

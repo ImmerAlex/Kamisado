@@ -8,16 +8,6 @@ import model.HoleStageModel;
 
 /**
  * HoleStageView has to create all the looks for all game elements created by the HoleStageFactory.
- * The desired UI is the following:
- * player            ╔═╗    ┏━━━┓
- * A   B   C      ║1║    ┃ 1 ┃
- * ╔═══╦═══╦═══╗    ╠═╣    ┣━━━┫
- * 1║   ║   ║   ║    ║2║    ┃ 2 ┃
- * ╠═══╬═══╬═══╣    ╠═╣    ┣━━━┫
- * 2║   ║   ║   ║    ║3║    ┃ 3 ┃
- * ╠═══╬═══╬═══╣    ╠═╣    ┣━━━┫
- * 3║   ║   ║   ║    ║4║    ┃ 4 ┃
- * ╚═══╩═══╩═══╝    ╚═╝    ┗━━━┛
  * <p>
  * The UI constraints are :
  * - the main board has double-segments border, coordinates, and cells of size 2x4
