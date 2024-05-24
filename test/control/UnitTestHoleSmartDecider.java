@@ -41,21 +41,73 @@ public class UnitTestHoleSmartDecider {
 
     @Test
     void testCanPawnMove() {
-        when(mockedStage.reverseComputeX(Mockito.anyInt())).thenReturn(0);
-        when(mockedStage.reverseComputeY(Mockito.anyInt())).thenReturn(0);
+        HoleStageModel stage = new HoleStageModel("test", model) {
+            @Override
+            public int reverseComputeX(int x) {
+                return 0;
+            }
 
-        when(mockedStage.getLockedColor()).thenReturn(ConsoleColor.BROWN_BACKGROUND);
-        assertFalse(holeSmartDecider.canPawnMove(mockedStage, board, pawn, "Player X"));
+            @Override
+            public int reverseComputeY(int x) {
+                return 0;
+            }
 
-        when(mockedStage.reverseComputeX(Mockito.anyInt())).thenReturn(0);
-        when(mockedStage.reverseComputeY(Mockito.anyInt())).thenReturn(4);
+            @Override
+            public String getLockedColor() {
+                return ConsoleColor.BROWN_BACKGROUND;
+            }
+        };
+
+//        when(mockedStage.reverseComputeX(Mockito.anyInt())).thenReturn(0);
+//        when(mockedStage.reverseComputeY(Mockito.anyInt())).thenReturn(0);
+//        when(mockedStage.getLockedColor()).thenReturn(ConsoleColor.BROWN_BACKGROUND);
+
+        assertFalse(stage.canPawnMove(stage, board, pawn, "Player X"));
+
+        stage = new HoleStageModel("test", model) {
+            @Override
+            public int reverseComputeX(int x) {
+                return 0;
+            }
+
+            @Override
+            public int reverseComputeY(int x) {
+                return 4;
+            }
+
+            @Override
+            public String getLockedColor() {
+                return ConsoleColor.BROWN_BACKGROUND;
+            }
+        };
+
+//        when(mockedStage.reverseComputeX(Mockito.anyInt())).thenReturn(0);
+//        when(mockedStage.reverseComputeY(Mockito.anyInt())).thenReturn(4);
+
         board.addElement(pawn, 5, 0);
 
-        when(mockedStage.getLockedColor()).thenReturn(ConsoleColor.BROWN_BACKGROUND);
-        assertTrue(holeSmartDecider.canPawnMove(mockedStage, board, pawn, "Player X"));
+//        when(mockedStage.getLockedColor()).thenReturn(ConsoleColor.BROWN_BACKGROUND);
+        assertTrue(stage.canPawnMove(stage, board, pawn, "Player X"));
+
+        stage = new HoleStageModel("test", model) {
+            @Override
+            public int reverseComputeX(int x) {
+                return 0;
+            }
+
+            @Override
+            public int reverseComputeY(int x) {
+                return 4;
+            }
+
+            @Override
+            public String getLockedColor() {
+                return ConsoleColor.BLUE_BACKGROUND;
+            }
+        };
 
         when(mockedStage.getLockedColor()).thenReturn(ConsoleColor.BLUE_BACKGROUND);
-        assertFalse(holeSmartDecider.canPawnMove(mockedStage, board, pawn, "Player X"));
+        assertFalse(stage.canPawnMove(stage, board, pawn, "Player X"));
     }
 
     @Test
@@ -80,6 +132,6 @@ public class UnitTestHoleSmartDecider {
         }
         stage.setOPawns(pawnO);
 
-        assertTrue(holeSmartDecider.noOneCanMove(stage, board));
+        assertTrue(stage.noOneCanMove(stage, board));
     }
 }
