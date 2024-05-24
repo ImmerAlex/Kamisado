@@ -254,7 +254,8 @@ public class HoleSmartDecider extends Decider {
         int computeX = stage.reverseComputeX(x);
         int computeY = stage.reverseComputeY(y) + 1;
 
-        Pawn tempPawn = (Pawn) board.getElement(computeY, computeX);
+        Pawn tempPawn = (Pawn) board.getElement(computeX, computeY);
+
         if (tempPawn != null && ConsoleColor.getColorValue(tempPawn.getStringColor()).equals(stage.getLockedColor())) {
             List<String> validMoves = getValidCellsMove(createMinimalBoard(board), computeX, computeY, playerName);
             return !validMoves.isEmpty();
