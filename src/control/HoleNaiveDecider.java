@@ -68,8 +68,6 @@ public class HoleNaiveDecider extends Decider {
 
                 List<Node> nodes = tree.getAll10Point();
 
-                System.out.println("Nodes size: " + nodes.size() + ", nodes: " + nodes);
-
                 if (nodes.size() == 0) {
                     to = getRandomCoup();
                 } else {

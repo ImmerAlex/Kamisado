@@ -71,7 +71,7 @@ public class HoleController extends Controller {
                         }
 
                         if (!stage.goodFromEntry(lineFrom)) {
-                            System.out.println("Incorrect list_test. Retry !");
+                            System.out.println("Incorrect instruction. Retry !");
                             continue;
                         }
 
