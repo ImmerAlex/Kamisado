@@ -205,4 +205,68 @@ public class HoleStageModel extends GameStageModel {
     public String getLockedColor() {
         return lockedColor;
     }
+
+    public MinimalBoard[][] createMinimalBoard(HoleBoard board) {
+        MinimalBoard[][] minimalBoard = new MinimalBoard[board.getNbCols()][board.getNbRows()];
+
+        for (int i = 0; i < board.getNbCols(); i++) {
+            for (int j = 0; j < board.getNbRows(); j++) {
+                Pawn pawn = (Pawn) board.getElement(i, j);
+                minimalBoard[i][j] = pawn != null ? new MinimalBoard(pawn.getSymbol(), pawn.getColor()) : new MinimalBoard('N', -1);
+            }
+        }
+
+        return minimalBoard;
+    }
+
+    public List<String> getValidCellsMove(MinimalBoard[][] minimalBoard, int row, int col, String playerName) {
+        List<String> lst = new ArrayList<>();
+        int[][] directions = playerName.contains("X") ? new int[][]{{0, -1}, {1, -1}, {-1, -1}} : new int[][]{{0, 1}, {1, 1}, {-1, 1}};
+
+        for (int[] dir : directions) {
+            int dx = dir[0], dy = dir[1];
+            int x = row + dx, y = col + dy;
+
+            while (x >= 0 && x < 8 && y >= 0 && y < 8) {
+                if (minimalBoard[y][x].getSymbol() == 'N') {
+                    lst.add("" + (char) (x + 'A') + (y + 1));
+                } else {
+                    break;
+                }
+                x += dx;
+                y += dy;
+            }
+        }
+
+        return lst;
+    }
+
+
+    public boolean noOneCanMove(HoleStageModel stage, HoleBoard board) {
+        for (Pawn pawn : stage.getXPawns()) {
+            if (canPawnMove(stage, board, pawn, "Player X")) return false;
+        }
+
+        for (Pawn pawn : stage.getOPawns()) {
+            if (canPawnMove(stage, board, pawn, "Player O")) return false;
+        }
+
+        return true;
+    }
+
+    public boolean canPawnMove(HoleStageModel stage, HoleBoard board, Pawn pawn, String playerName) {
+        int x = (int) pawn.getLocation().getX();
+        int y = (int) pawn.getLocation().getY();
+        int computeX = stage.reverseComputeX(x);
+        int computeY = stage.reverseComputeY(y) + 1;
+
+        Pawn tempPawn = (Pawn) board.getElement(computeY, computeX);
+
+        if (tempPawn != null && ConsoleColor.getColorValue(tempPawn.getStringColor()).equals(stage.getLockedColor())) {
+            List<String> validMoves = getValidCellsMove(createMinimalBoard(board), computeX, computeY, playerName);
+            return !validMoves.isEmpty();
+        }
+
+        return false;
+    }
 }

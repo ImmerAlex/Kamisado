@@ -100,6 +100,11 @@ public class HoleController extends Controller {
                         lineFrom = stage.findPawnFrom();
 
                         if (!stage.canMoveFrom(lineFrom)) {
+                            if (stage.noOneCanMove(stage, stage.getBoard())) {
+                                System.out.println("No one can move.");
+                                model.stopStage();
+                                break;
+                            }
                             System.out.println(model.getGameStage().getCurrentPlayerName() + " cannot move. Pass turn.");
                             ok = true;
                             continue;
