@@ -28,6 +28,6 @@ desktop.ini
 hs_err_pid*
 replay_pid*
 
-#.idea
+.idea
 out
 .gitinore
