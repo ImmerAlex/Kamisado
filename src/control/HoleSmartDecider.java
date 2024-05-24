@@ -56,8 +56,9 @@ public class HoleSmartDecider extends Decider {
 
                 if (!stage.isValidCoordinates(rowFrom, colFrom) || !stage.goodFromEntry(rowFrom, colFrom) || !stage.canMoveFrom(from)) {
                     if (noOneCanMove(stage, board)) {
-                        System.out.println("No one can move. End of game.");
-                        System.exit(0);
+                        System.out.println("No one can move.");
+                        model.stopStage();
+                        return null;
                     }
                     System.out.println(model.getGameStage().getCurrentPlayerName() + " cannot move. Pass turn.");
                     ok = true;
