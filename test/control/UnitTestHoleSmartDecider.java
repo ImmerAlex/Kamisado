@@ -22,6 +22,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class UnitTestHoleSmartDecider {
+    Model model;
     private HoleSmartDecider holeSmartDecider;
     private HoleStageModel mockedStage;
     private HoleBoard board;
@@ -29,7 +30,7 @@ public class UnitTestHoleSmartDecider {
 
     @BeforeEach
     public void setup() {
-        Model model = new Model();
+        model = new Model();
         View holeView = new View(model);
         HoleController holeController = new HoleController(model, holeView);
         holeSmartDecider = new HoleSmartDecider(model, holeController, holeView);
@@ -46,12 +47,12 @@ public class UnitTestHoleSmartDecider {
         when(mockedStage.getLockedColor()).thenReturn(ConsoleColor.BROWN_BACKGROUND);
         assertFalse(holeSmartDecider.canPawnMove(mockedStage, board, pawn, "Player X"));
 
-        when(mockedStage.reverseComputeX(Mockito.anyInt())).thenReturn(5);
-        when(mockedStage.reverseComputeY(Mockito.anyInt())).thenReturn(-1);
+        when(mockedStage.reverseComputeX(Mockito.anyInt())).thenReturn(0);
+        when(mockedStage.reverseComputeY(Mockito.anyInt())).thenReturn(4);
         board.addElement(pawn, 5, 0);
 
         when(mockedStage.getLockedColor()).thenReturn(ConsoleColor.BROWN_BACKGROUND);
-        assertFalse(holeSmartDecider.canPawnMove(mockedStage, board, pawn, "Player X"));
+        assertTrue(holeSmartDecider.canPawnMove(mockedStage, board, pawn, "Player X"));
 
         when(mockedStage.getLockedColor()).thenReturn(ConsoleColor.BLUE_BACKGROUND);
         assertFalse(holeSmartDecider.canPawnMove(mockedStage, board, pawn, "Player X"));
@@ -59,7 +60,7 @@ public class UnitTestHoleSmartDecider {
 
     @Test
     void testNoOneCanMoveTrue() {
-        HoleStageModel stage = mockedStage;
+        HoleStageModel stage = new HoleStageModel("test", model);
         HoleBoard board = this.board;
 
         // Create pawns
@@ -79,16 +80,52 @@ public class UnitTestHoleSmartDecider {
         }
         stage.setOPawns(pawnO);
 
-        // Assume that neither pawn can move
-        when(mockedStage.getLockedColor()).thenReturn(ConsoleColor.BROWN_BACKGROUND);
-
-        // Test the method
         assertTrue(holeSmartDecider.noOneCanMove(stage, board));
+    }
 
-        // Now assume that the X pawn can move
-        when(mockedStage.getLockedColor()).thenReturn(ConsoleColor.BLUE_BACKGROUND);
+    @Test
+    void testNoOneCanMoveFalsePlayerXCanMove() {
+        HoleStageModel stage = new HoleStageModel("test", model);
+        HoleBoard board = this.board;
 
-        // Test the method again
+        // Create pawns
+        List<Pawn> pawnX = Arrays.asList(
+          new Pawn(0, 1, 'X', stage),
+          new Pawn(0, 1, 'X', stage),
+          new Pawn(0, 1, 'X', stage),
+          new Pawn(0, 1, 'X', stage),
+          new Pawn(0, 1, 'X', stage),
+          new Pawn(0, 1, 'X', stage),
+          new Pawn(0, 1, 'X', stage),
+          new Pawn(0, 1, 'X', stage)
+        );
+        for (int i = 0; i < 8; i++) {
+            board.addElement(pawnX.get(i), i, 6);
+        }
+        stage.setXPawns(pawnX);
+
+        List<Pawn> pawnO = Arrays.asList(
+          new Pawn(0, 1, 'O', stage),
+          new Pawn(0, 1, 'O', stage),
+          new Pawn(0, 1, 'O', stage),
+          new Pawn(0, 1, 'O', stage),
+          new Pawn(0, 1, 'O', stage),
+          new Pawn(0, 1, 'O', stage),
+          new Pawn(0, 1, 'O', stage),
+          new Pawn(0, 1, 'O', stage)
+        );
+        board.addElement(pawnO.get(0), 0, 5);
+        board.addElement(pawnO.get(1), 1, 5);
+        board.addElement(pawnO.get(2), 0, 4);
+        board.addElement(pawnO.get(3), 3, 5);
+        board.addElement(pawnO.get(4), 4, 5);
+        board.addElement(pawnO.get(5), 5, 5);
+        board.addElement(pawnO.get(6), 6, 5);
+        board.addElement(pawnO.get(7), 7, 5);
+        stage.setOPawns(pawnO);
+
+        System.out.println();
+
         assertFalse(holeSmartDecider.noOneCanMove(stage, board));
     }
 }
