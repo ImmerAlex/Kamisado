@@ -11,9 +11,6 @@ public class EntryFileContainer {
     }
 
     public static String getFirstEntry() {
-        if (entryFromFile.isEmpty()) {
-            return null;
-        }
         return entryFromFile.get(0);
     }
 

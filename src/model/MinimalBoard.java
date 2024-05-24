@@ -14,19 +14,7 @@ public class MinimalBoard {
         return symbol;
     }
 
-    public void setSymbol(char symbol) {
-        this.symbol = symbol;
-    }
-
     public int getIdColor() {
         return idColor;
-    }
-
-    public void setIdColor(int idColor) {
-        this.idColor = idColor;
-    }
-
-    public String toString() {
-        return "Symbol: " + symbol + ", idColor: " + idColor;
     }
 }
